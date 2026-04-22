@@ -1,7 +1,9 @@
 import React from 'react';
 import styles from './App.module.css';
-import { Sidebar } from './presentation/components/sidebar/Sidebar.tsx'
-import { ProductCard } from './presentation/components/product/ProductCard.tsx';
+import { Header } from './presentation/components/header/Header';
+import { Footer } from './presentation/components/footer/Footer';
+import { Sidebar } from './presentation/components/sidebar/Sidebar';
+import { ProductCard } from './presentation/components/product/ProductCard';
 import {type Product } from './domain/product/types';
 
 const mockProducts: Product[] = [
@@ -36,6 +38,7 @@ const mockProducts: Product[] = [
 const App: React.FC = () => {
   return (
     <div className={styles.layout}>
+      <Header />
       <main className={styles.mainContainer}>
         <Sidebar />
         
@@ -58,6 +61,7 @@ const App: React.FC = () => {
           </div>
         </section>
       </main>
+      <Footer />
     </div>
   );
 };
