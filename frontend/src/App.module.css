@@ -1,0 +1,35 @@
+.layout {
+  min-height: 100vh;
+}
+
+.mainContainer {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+.catalogSection {
+  flex: 1;
+}
+
+.catalogHeader {
+  margin-bottom: var(--spacing-xl);
+}
+
+.mainTitle {
+  font-size: 32px;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
