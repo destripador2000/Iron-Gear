@@ -1,9 +1,14 @@
 .layout {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .mainContainer {
-  max-width: 1440px;
+  width: 1126px;
+  max-width: 100%;
   margin: 0 auto;
   padding: var(--spacing-xl) var(--spacing-lg);
   display: flex;
