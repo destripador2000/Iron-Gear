@@ -32,6 +32,51 @@ const mockProducts: Product[] = [
     rating: 4.7,
     imageUrl: 'https://via.placeholder.com/300x300',
     imageAlt: 'Adjustable Bench'
+  },
+  {
+    id: '4',
+    title: 'Barra Olímpica de Acero',
+    price: 149.99,
+    rating: 4.6,
+    imageUrl: 'https://via.placeholder.com/300x300',
+    imageAlt: 'Barra Olímpica',
+    description: 'Barra de acero resistente con capacidad de 700kg. Acabado cromado anti-corrosión.'
+  },
+  {
+    id: '5',
+    title: 'Kettlebell Competition 16kg',
+    price: 89.99,
+    rating: 4.5,
+    imageUrl: 'https://via.placeholder.com/300x300',
+    imageAlt: 'Kettlebell',
+    description: 'Kettlebell de competencia con mango ergonómico. Fundición de alta calidad.'
+  },
+  {
+    id: '6',
+    title: 'Cinturón de Cuero Profesional',
+    price: 59.99,
+    rating: 4.8,
+    imageUrl: 'https://via.placeholder.com/300x300',
+    imageAlt: 'Cinturón',
+    description: 'Cinturón de cuero genuino con hebilla de doble pin. Soporte lumbar reforzado.'
+  },
+  {
+    id: '7',
+    title: 'Mancuernas Ajustables 5-25kg',
+    price: 249.00,
+    rating: 4.7,
+    imageUrl: 'https://via.placeholder.com/300x300',
+    imageAlt: 'Mancuernas Ajustables',
+    description: 'Sistema de ajuste rápido con incrementos de 2.5kg. Platos de acero recubiertos.'
+  },
+  {
+    id: '8',
+    title: 'Guantes de Levantamiento Pro',
+    price: 34.99,
+    rating: 4.4,
+    imageUrl: 'https://via.placeholder.com/300x300',
+    imageAlt: 'Guantes',
+    description: 'Guantes con soporte de muñeca y palma reforzada. Material transpirable.'
   }
 ];
 
@@ -45,7 +90,7 @@ const App: React.FC = () => {
         <section className={styles.catalogSection}>
           <div className={styles.catalogHeader}>
             <div>
-              <h1 className={styles.mainTitle}>Top 5 Productos Destacados</h1>
+              <h1 className={styles.mainTitle}>Top productos destacados</h1>
               <p className={styles.subtitle}>Nuestra selección premium de ingeniería superior diseñada para atletas de alto rendimiento.</p>
             </div>
           </div>
