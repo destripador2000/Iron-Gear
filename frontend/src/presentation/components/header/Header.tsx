@@ -32,7 +32,8 @@ export const Header: React.FC = () => {
         </div>
 
         <nav className={styles.navigation}>
-          <a href="#" className={`${styles.navLink} ${styles.active}`}>Mancuernas</a>
+          <a href="#" className={`${styles.navLink} ${styles.active}`}>Inicio</a>
+          <a href="#" className={styles.navLink}>Mancuernas</a>
           <a href="#" className={styles.navLink}>Barras</a>
           <a href="#" className={styles.navLink}>Máquinas</a>
           <a href="#" className={styles.navLink}>Ropa Deportiva</a>
