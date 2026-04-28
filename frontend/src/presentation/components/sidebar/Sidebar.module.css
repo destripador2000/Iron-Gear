@@ -44,6 +44,14 @@
   accent-color: var(--color-secondary);
 }
 
+.priceValue {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-top: var(--spacing-sm);
+}
+
 .rangeLabels {
   display: flex;
   justify-content: space-between;

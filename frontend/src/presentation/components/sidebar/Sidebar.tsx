@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Sidebar.module.css';
 
 export const Sidebar: React.FC = () => {
+  const [priceValue, setPriceValue] = useState(5000);
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.header}>
@@ -14,7 +16,15 @@ export const Sidebar: React.FC = () => {
           <span className="material-symbols-outlined">payments</span>
           <h4>Precio</h4>
         </div>
-        <input type="range" className={styles.rangeInput} min="0" max="5000" />
+        <input 
+          type="range" 
+          className={styles.rangeInput} 
+          min="0" 
+          max="5000" 
+          value={priceValue}
+          onChange={(e) => setPriceValue(Number(e.target.value))}
+        />
+        <div className={styles.priceValue}>${priceValue.toLocaleString()}</div>
         <div className={styles.rangeLabels}>
           <span>$0</span>
           <span>$5000+</span>
