@@ -2,12 +2,12 @@ import React from 'react';
 import styles from './Header.module.css';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells';
-  onNavigate?: (page: 'home' | 'dumbbells') => void;
+  currentPage?: 'home' | 'dumbbells' | 'bars';
+  onNavigate?: (page: 'home' | 'dumbbells' | 'bars') => void;
 }
 
 export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) => {
-  const handleNavClick = (page: 'home' | 'dumbbells') => (e: React.MouseEvent) => {
+  const handleNavClick = (page: 'home' | 'dumbbells' | 'bars') => (e: React.MouseEvent) => {
     e.preventDefault();
     onNavigate?.(page);
   };
@@ -56,7 +56,13 @@ export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) =>
           >
             Mancuernas
           </a>
-          <a href="#" className={styles.navLink}>Barras</a>
+          <a 
+            href="#" 
+            className={`${styles.navLink} ${currentPage === 'bars' ? styles.active : ''}`}
+            onClick={handleNavClick('bars')}
+          >
+            Barras
+          </a>
           <a href="#" className={styles.navLink}>Máquinas</a>
           <a href="#" className={styles.navLink}>Ropa Deportiva</a>
           <a href="#" className={styles.navLink}>Suplementos</a>
