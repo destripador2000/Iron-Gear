@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './App.module.css';
 import { Header } from './presentation/components/header/Header';
 import { Footer } from './presentation/components/footer/Footer';
 import { Sidebar } from './presentation/components/sidebar/Sidebar';
 import { ProductCard } from './presentation/components/product/ProductCard';
+import { DumbbellsPage } from './presentation/pages/dumbbells/DumbbellsPage';
 import {type Product } from './domain/product/types';
 
 const mockProducts: Product[] = [
@@ -12,6 +13,7 @@ const mockProducts: Product[] = [
     title: 'Olympic Weight Plates Set',
     price: 299.00,
     rating: 4.8,
+    reviews: 0,
     imageUrl: 'https://via.placeholder.com/600x400',
     imageAlt: 'Olympic Plates',
     description: 'Construidos con uretano de alta densidad para máxima durabilidad y absorción de impacto. Ideales para levantamientos explosivos.',
@@ -22,6 +24,7 @@ const mockProducts: Product[] = [
     title: 'Whey Protein Isolated 5lb',
     price: 79.99,
     rating: 4.9,
+    reviews: 0,
     imageUrl: 'https://via.placeholder.com/300x300',
     imageAlt: 'Whey Protein'
   },
@@ -30,6 +33,7 @@ const mockProducts: Product[] = [
     title: 'Adjustable Pro Bench G3',
     price: 199.00,
     rating: 4.7,
+    reviews: 0,
     imageUrl: 'https://via.placeholder.com/300x300',
     imageAlt: 'Adjustable Bench'
   },
@@ -38,6 +42,7 @@ const mockProducts: Product[] = [
     title: 'Barra Olímpica de Acero',
     price: 149.99,
     rating: 4.6,
+    reviews: 0,
     imageUrl: 'https://via.placeholder.com/300x300',
     imageAlt: 'Barra Olímpica',
     description: 'Barra de acero resistente con capacidad de 700kg. Acabado cromado anti-corrosión.'
@@ -47,6 +52,7 @@ const mockProducts: Product[] = [
     title: 'Kettlebell Competition 16kg',
     price: 89.99,
     rating: 4.5,
+    reviews: 0,
     imageUrl: 'https://via.placeholder.com/300x300',
     imageAlt: 'Kettlebell',
     description: 'Kettlebell de competencia con mango ergonómico. Fundición de alta calidad.'
@@ -56,6 +62,7 @@ const mockProducts: Product[] = [
     title: 'Cinturón de Cuero Profesional',
     price: 59.99,
     rating: 4.8,
+    reviews: 0,
     imageUrl: 'https://via.placeholder.com/300x300',
     imageAlt: 'Cinturón',
     description: 'Cinturón de cuero genuino con hebilla de doble pin. Soporte lumbar reforzado.'
@@ -65,6 +72,7 @@ const mockProducts: Product[] = [
     title: 'Mancuernas Ajustables 5-25kg',
     price: 249.00,
     rating: 4.7,
+    reviews: 0,
     imageUrl: 'https://via.placeholder.com/300x300',
     imageAlt: 'Mancuernas Ajustables',
     description: 'Sistema de ajuste rápido con incrementos de 2.5kg. Platos de acero recubiertos.'
@@ -74,6 +82,7 @@ const mockProducts: Product[] = [
     title: 'Guantes de Levantamiento Pro',
     price: 34.99,
     rating: 4.4,
+    reviews: 0,
     imageUrl: 'https://via.placeholder.com/300x300',
     imageAlt: 'Guantes',
     description: 'Guantes con soporte de muñeca y palma reforzada. Material transpirable.'
@@ -81,9 +90,15 @@ const mockProducts: Product[] = [
 ];
 
 const App: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<'home' | 'dumbbells'>('home');
+
+  if (currentPage === 'dumbbells') {
+    return <DumbbellsPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+  }
+
   return (
     <div className={styles.layout}>
-      <Header />
+      <Header currentPage={currentPage} onNavigate={setCurrentPage} />
       <main className={styles.mainContainer}>
         <Sidebar />
         

@@ -6,6 +6,7 @@
   --color-primary: #a04100;
   --color-primary-container: #ff6b00;
   --color-secondary: #0050cc;
+  --color-surface-container-lowest: #e2bfb0;
   --text-main: #261812;
   --text-muted: #5a4136;
   --text-light: #9a9898;
@@ -26,6 +27,30 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: transparent;
+}
+
+html {
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 body {
