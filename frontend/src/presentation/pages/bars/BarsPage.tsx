@@ -6,8 +6,8 @@ import { Sidebar } from '../../components/sidebar/Sidebar';
 import { type Product } from '../../../domain/product/types';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars') => void;
+  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing';
+  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing') => void;
 }
 
 const barProducts: Product[] = [
