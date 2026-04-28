@@ -1,7 +1,17 @@
 import React from 'react';
 import styles from './Header.module.css';
 
-export const Header: React.FC = () => {
+interface Props {
+  currentPage?: 'home' | 'dumbbells';
+  onNavigate?: (page: 'home' | 'dumbbells') => void;
+}
+
+export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) => {
+  const handleNavClick = (page: 'home' | 'dumbbells') => (e: React.MouseEvent) => {
+    e.preventDefault();
+    onNavigate?.(page);
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -32,8 +42,20 @@ export const Header: React.FC = () => {
         </div>
 
         <nav className={styles.navigation}>
-          <a href="#" className={`${styles.navLink} ${styles.active}`}>Inicio</a>
-          <a href="#" className={styles.navLink}>Mancuernas</a>
+          <a 
+            href="#" 
+            className={`${styles.navLink} ${currentPage === 'home' ? styles.active : ''}`}
+            onClick={handleNavClick('home')}
+          >
+            Inicio
+          </a>
+          <a 
+            href="#" 
+            className={`${styles.navLink} ${currentPage === 'dumbbells' ? styles.active : ''}`}
+            onClick={handleNavClick('dumbbells')}
+          >
+            Mancuernas
+          </a>
           <a href="#" className={styles.navLink}>Barras</a>
           <a href="#" className={styles.navLink}>Máquinas</a>
           <a href="#" className={styles.navLink}>Ropa Deportiva</a>
