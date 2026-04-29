@@ -72,9 +72,19 @@ export const SupplementsPage: React.FC<Props> = ({ currentPage = 'supplements', 
       <div className={styles.pageContainer}>
         <Sidebar />
         <main className={styles.mainContent}>
-          <div className={styles.categoryHeader}>
-            <h1 className={styles.categoryTitle}>Suplementos</h1>
+          <div className={styles.heroBanner}>
+            <img 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPVaR-IHY98Czm9Yyq_Psl6ag4Zg8RhdSxKhxurHyD9ol7LLlQKQEB23FC7BliUkeD31sdIME9_tZj-igl_9a3tXf0wglDU1pTvedskPFpkV7cPFIlYMHuLmQBPtjH58DUwv-19lCm-00nCdlZ9zoMV5-8vhaEkVaA7Cs3nPqSfr8B33ReqR3QHp4OSzWZXIAJNir_TsQ3D0Qa6tbvRV7W9mfvZzTQbm4hj4rWo0zj_Aq873NKgBJYJ9iLD08d6Ids-YAnMfVgMCWx" 
+              alt="Supplements" 
+              className={styles.heroImage}
+            />
+            <div className={styles.heroContent}>
+              <span className={styles.heroLabel}>Performance Nutrition</span>
+              <h1 className={styles.heroTitle}>Suplementos</h1>
+              <p className={styles.heroDescription}>Nutrición de grado profesional para máximo rendimiento deportivo.</p>
+            </div>
           </div>
+
           <div className={styles.productGrid}>
             {supplementProducts.map((product) => (
               <article key={product.id} className={styles.productCard}>

@@ -12,6 +12,59 @@
   min-width: 0;
 }
 
+.heroBanner {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  background-color: #1a1a1a;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+}
+
+.heroContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px;
+  background: linear-gradient(to right, rgba(26, 26, 26, 0.9), rgba(26, 26, 26, 0.4), transparent);
+}
+
+.heroLabel {
+  color: var(--color-primary-container);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 16px;
+}
+
+.heroTitle {
+  font-size: 48px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  max-width: 600px;
+}
+
+.heroDescription {
+  color: #d1d5db;
+  margin-top: 16px;
+  max-width: 500px;
+  line-height: 1.6;
+}
+
 .categoryHeader {
   margin-bottom: var(--spacing-xl);
 }
