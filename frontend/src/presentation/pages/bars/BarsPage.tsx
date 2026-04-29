@@ -86,8 +86,17 @@ export const BarsPage: React.FC<Props> = ({ currentPage = 'bars', onNavigate }) 
       <div className={styles.pageContainer}>
         <Sidebar />
         <main className={styles.mainContent}>
-          <div className={styles.categoryHeader}>
-            <h1 className={styles.categoryTitle}>Barras Olímpicas y Profesionales</h1>
+          <div className={styles.heroBanner}>
+            <img 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPVaR-IHY98Czm9Yyq_Psl6ag4Zg8RhdSxKhxurHyD9ol7LLlQKQEB23FC7BliUkeD31sdIME9_tZj-igl_9a3tXf0wglDU1pTvedskPFpkV7cPFIlYMHuLmQBPtjH58DUwv-19lCm-00nCdlZ9zoMV5-8vhaEkVaA7Cs3nPqSfr8B33ReqR3QHp4OSzWZXIAJNir_TsQ3D0Qa6tbvRV7W9mfvZzTQbm4hj4rWo0zj_Aq873NKgBJYJ9iLD08d6Ids-YAnMfVgMCWx" 
+              alt="Bars" 
+              className={styles.heroImage}
+            />
+            <div className={styles.heroContent}>
+              <span className={styles.heroLabel}>Olympic & Professional</span>
+              <h1 className={styles.heroTitle}>Barras</h1>
+              <p className={styles.heroDescription}>Barras olimpicas y profesionales de alta resistencia para entrenamiento de fuerza avanzado.</p>
+            </div>
           </div>
 
           <div className={styles.productGrid}>
