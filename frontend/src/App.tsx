@@ -9,6 +9,7 @@ import { BarsPage } from './presentation/pages/bars/BarsPage';
 import { ClothingPage } from './presentation/pages/clothing/ClothingPage';
 import { MachinesPage } from './presentation/pages/machines/MachinesPage';
 import { SupplementsPage } from './presentation/pages/supplements/SupplementsPage';
+import { PharmacologyPage } from './presentation/pages/pharmacology/PharmacologyPage';
 import {type Product } from './domain/product/types';
 
 const mockProducts: Product[] = [
@@ -93,7 +94,7 @@ const mockProducts: Product[] = [
   }
 ];
 
-type Page = 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements';
+type Page = 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -116,6 +117,10 @@ const App: React.FC = () => {
 
   if (currentPage === 'supplements') {
     return <SupplementsPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+  }
+
+  if (currentPage === 'pharmacology') {
+    return <PharmacologyPage currentPage={currentPage} onNavigate={setCurrentPage} />;
   }
 
   return (
