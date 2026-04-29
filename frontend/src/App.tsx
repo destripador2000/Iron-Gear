@@ -130,10 +130,16 @@ const App: React.FC = () => {
         <Sidebar />
         
         <section className={styles.catalogSection}>
-          <div className={styles.catalogHeader}>
-            <div>
-              <h1 className={styles.mainTitle}>Top productos destacados</h1>
-              <p className={styles.subtitle}>Nuestra selección premium de ingeniería superior diseñada para atletas de alto rendimiento.</p>
+          <div className={styles.heroBanner}>
+            <img 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPVaR-IHY98Czm9Yyq_Psl6ag4Zg8RhdSxKhxurHyD9ol7LLlQKQEB23FC7BliUkeD31sdIME9_tZj-igl_9a3tXf0wglDU1pTvedskPFpkV7cPFIlYMHuLmQBPtjH58DUwv-19lCm-00nCdlZ9zoMV5-8vhaEkVaA7Cs3nPqSfr8B33ReqR3QHp4OSzWZXIAJNir_TsQ3D0Qa6tbvRV7W9mfvZzTQbm4hj4rWo0zj_Aq873NKgBJYJ9iLD08d6Ids-YAnMfVgMCWx" 
+              alt="Iron Gear" 
+              className={styles.heroImage}
+            />
+            <div className={styles.heroContent}>
+              <span className={styles.heroLabel}>Professional Equipment</span>
+              <h1 className={styles.heroTitle}>Iron Gear</h1>
+              <p className={styles.heroDescription}>Nuestra selección premium de ingeniería superior diseñada para atletas de alto rendimiento.</p>
             </div>
           </div>
 
