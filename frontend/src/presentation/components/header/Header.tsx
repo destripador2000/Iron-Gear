@@ -2,12 +2,12 @@ import React from 'react';
 import styles from './Header.module.css';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing') => void;
+  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines';
+  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines') => void;
 }
 
 export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) => {
-  const handleNavClick = (page: 'home' | 'dumbbells' | 'bars' | 'clothing') => (e: React.MouseEvent) => {
+  const handleNavClick = (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines') => (e: React.MouseEvent) => {
     e.preventDefault();
     onNavigate?.(page);
   };
@@ -70,7 +70,13 @@ export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) =>
           >
             Ropa
           </a>
-          <a href="#" className={styles.navLink}>Máquinas</a>
+          <a 
+            href="#" 
+            className={`${styles.navLink} ${currentPage === 'machines' ? styles.active : ''}`}
+            onClick={handleNavClick('machines')}
+          >
+            Máquinas
+          </a>
           <a href="#" className={styles.navLink}>Suplementos</a>
           <a href="#" className={styles.navLink}>Farmacología Deportiva</a>
         </nav>
