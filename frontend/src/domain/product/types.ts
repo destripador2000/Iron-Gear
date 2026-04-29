@@ -12,6 +12,7 @@ export interface Product {
   weight?: string;
   material?: string;
   category?: string;
+  brand?: string;
 }
 
 export interface FilterState {
