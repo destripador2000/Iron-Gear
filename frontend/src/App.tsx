@@ -7,6 +7,7 @@ import { ProductCard } from './presentation/components/product/ProductCard';
 import { DumbbellsPage } from './presentation/pages/dumbbells/DumbbellsPage';
 import { BarsPage } from './presentation/pages/bars/BarsPage';
 import { ClothingPage } from './presentation/pages/clothing/ClothingPage';
+import { MachinesPage } from './presentation/pages/machines/MachinesPage';
 import {type Product } from './domain/product/types';
 
 const mockProducts: Product[] = [
@@ -91,7 +92,7 @@ const mockProducts: Product[] = [
   }
 ];
 
-type Page = 'home' | 'dumbbells' | 'bars' | 'clothing';
+type Page = 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -106,6 +107,10 @@ const App: React.FC = () => {
 
   if (currentPage === 'clothing') {
     return <ClothingPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+  }
+
+  if (currentPage === 'machines') {
+    return <MachinesPage currentPage={currentPage} onNavigate={setCurrentPage} />;
   }
 
   return (
