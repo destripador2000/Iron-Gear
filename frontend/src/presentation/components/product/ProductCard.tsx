@@ -12,7 +12,6 @@ export const ProductCard: React.FC<Props> = ({ product, isFeatured }) => {
     <article className={`${styles.card} ${isFeatured ? styles.featured : ''}`}>
       <div className={styles.imageContainer}>
         <img src={product.imageUrl} alt={product.imageAlt} className={styles.image} />
-        {product.isPremium && <span className={styles.premiumBadge}>PREMIUM</span>}
       </div>
       
       <div className={styles.content}>

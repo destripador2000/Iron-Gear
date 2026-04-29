@@ -6,8 +6,8 @@ import { Sidebar } from '../../components/sidebar/Sidebar';
 import { type Product } from '../../../domain/product/types';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines') => void;
+  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements';
+  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements') => void;
 }
 
 const clothingProducts: Product[] = [
@@ -67,26 +67,6 @@ const clothingProducts: Product[] = [
     imageAlt: 'Gorra Iron Gear Snapback'
   }
 ];
-
-const renderStars = (rating: number) => {
-  return Array.from({ length: 5 }, (_, i) => {
-    let starClass = styles.starEmpty;
-    if (i < rating) {
-      starClass = styles.starFilled;
-    } else if (i === rating && rating % 1 !== 0) {
-      starClass = styles.starHalf;
-    }
-    return (
-      <span 
-        key={i} 
-        className={`${styles.star} ${starClass} material-symbols-outlined`}
-        style={{ fontVariationSettings: i < rating ? "'FILL' 1" : i === rating && rating % 1 !== 0 ? "'FILL' 1" : "'FILL' 0" }}
-      >
-        star
-      </span>
-    );
-  });
-};
 
 export const ClothingPage: React.FC<Props> = ({ currentPage = 'clothing', onNavigate }) => {
   return (

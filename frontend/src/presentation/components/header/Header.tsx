@@ -2,12 +2,12 @@ import React from 'react';
 import styles from './Header.module.css';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines') => void;
+  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements';
+  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements') => void;
 }
 
 export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) => {
-  const handleNavClick = (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines') => (e: React.MouseEvent) => {
+  const handleNavClick = (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements') => (e: React.MouseEvent) => {
     e.preventDefault();
     onNavigate?.(page);
   };
@@ -77,7 +77,13 @@ export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) =>
           >
             Máquinas
           </a>
-          <a href="#" className={styles.navLink}>Suplementos</a>
+          <a 
+            href="#" 
+            className={`${styles.navLink} ${currentPage === 'supplements' ? styles.active : ''}`}
+            onClick={handleNavClick('supplements')}
+          >
+            Suplementos
+          </a>
           <a href="#" className={styles.navLink}>Farmacología Deportiva</a>
         </nav>
       </div>

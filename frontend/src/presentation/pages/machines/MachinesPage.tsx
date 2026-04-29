@@ -6,8 +6,8 @@ import { Sidebar } from '../../components/sidebar/Sidebar';
 import { type Product } from '../../../domain/product/types';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines') => void;
+  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements';
+  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements') => void;
 }
 
 const machineProducts: Product[] = [
@@ -67,18 +67,6 @@ const machineProducts: Product[] = [
     imageAlt: 'Pec Deck Fly'
   }
 ];
-
-const renderStars = (rating: number) => {
-  return Array.from({ length: 5 }, (_, i) => (
-    <span 
-      key={i} 
-      className={`${styles.star} ${i < rating ? styles.starFilled : styles.starEmpty} material-symbols-outlined`}
-      style={{ fontVariationSettings: i < rating ? "'FILL' 1" : "'FILL' 0" }}
-    >
-      star
-    </span>
-  ));
-};
 
 export const MachinesPage: React.FC<Props> = ({ currentPage = 'machines', onNavigate }) => {
   return (
