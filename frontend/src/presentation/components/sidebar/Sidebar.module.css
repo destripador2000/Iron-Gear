@@ -88,3 +88,24 @@
 .clearBtn:hover {
   background: rgba(0, 80, 204, 0.05);
 }
+
+.noticeBox {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 16px;
+  margin-top: 48px;
+}
+
+.noticeLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  margin: 0 0 8px 0;
+}
+
+.noticeText {
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+}
