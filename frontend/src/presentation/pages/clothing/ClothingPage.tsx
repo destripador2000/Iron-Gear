@@ -96,14 +96,7 @@ export const ClothingPage: React.FC<Props> = ({ currentPage = 'clothing', onNavi
         <Sidebar />
         <main className={styles.mainContent}>
           <div className={styles.categoryHeader}>
-            <div>
-              <h1 className={styles.categoryTitle}>Ropa Técnica de Alto Rendimiento</h1>
-              <p className={styles.categoryDescription}>Equipamiento diseñado para atletas que no conocen límites.</p>
-            </div>
-            <div className={styles.categoryInfo}>
-              <span className={styles.productCount}>{clothingProducts.length} Productos</span>
-              <span className={styles.sortBtn}>Ordenar por: Popularidad</span>
-            </div>
+            <h1 className={styles.categoryTitle}>Ropa</h1>
           </div>
 
           <div className={styles.productGrid}>
@@ -115,32 +108,16 @@ export const ClothingPage: React.FC<Props> = ({ currentPage = 'clothing', onNavi
                     alt={product.imageAlt} 
                     className={styles.productImage}
                   />
-                  {product.isPremium && (
-                    <span className={styles.badge}>Best Seller</span>
-                  )}
                   <div className={styles.quickAdd}>
                     <button className={styles.quickAddButton}>
-                      <span className="material-symbols-outlined">add_shopping_cart</span>
+                      <span className="material-symbols-outlined">shopping_cart</span>
+                      AGREGAR AL CARRITO
                     </button>
                   </div>
                 </div>
                 <div className={styles.productInfo}>
-                  <div className={styles.productHeader}>
-                    <h3 className={styles.productTitle}>{product.title}</h3>
-                    <span className={styles.productPrice}>${product.price.toFixed(2)}</span>
-                  </div>
-                  <p className={styles.productDescription}>
-                    {product.id === '1' && 'Camiseta de compresión térmica de grado profesional.'}
-                    {product.id === '2' && 'Corte ergonómico para movilidad total en sentadillas.'}
-                    {product.id === '3' && 'Sudadera de algodón premium de alta densidad.'}
-                    {product.id === '4' && 'Camiseta de tirantes con corte stringer clásico.'}
-                    {product.id === '5' && 'Compresión en arco y amortiguación reforzada.'}
-                    {product.id === '6' && 'Gorra táctica con banda de absorción de sudor.'}
-                  </p>
-                  <div className={styles.rating}>
-                    {renderStars(product.rating)}
-                    <span className={styles.reviewCount}>({product.reviews})</span>
-                  </div>
+                  <h3 className={styles.productTitle}>{product.title}</h3>
+                  <p className={styles.productPrice}>${product.price.toFixed(2)}</p>
                 </div>
               </article>
             ))}
