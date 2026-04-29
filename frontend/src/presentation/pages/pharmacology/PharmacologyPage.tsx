@@ -70,6 +70,7 @@ export const PharmacologyPage: React.FC<Props> = ({ currentPage = 'pharmacology'
             <div className={styles.heroContent}>
               <span className={styles.heroLabel}>Performance Enhancement</span>
               <h1 className={styles.heroTitle}>Advanced Pharmacological Support</h1>
+              <p className={styles.heroDescription}>Precision-engineered recovery aids and performance optimizers for the elite competitive landscape.</p>
             </div>
           </div>
 
