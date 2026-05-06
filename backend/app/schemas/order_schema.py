@@ -49,3 +49,18 @@ class OrderRead(OrderBase):
     updated_at: datetime
     user: UserRead | None = None
     items: list[OrderItemRead] = []
+
+
+class PaymentRequest(BaseSchema):
+    # Esquema para solicitud de pago simulado
+    payment_method: str = Field(pattern="^(paypal|tarjeta)$")
+    transaction_id: str = Field(min_length=1, max_length=100)
+
+
+class PaymentResponse(BaseSchema):
+    # Esquema para respuesta de pago
+    order_id: int
+    status: str
+    payment_method: str
+    transaction_id: str
+    message: str
