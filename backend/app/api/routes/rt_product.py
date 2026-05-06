@@ -10,6 +10,8 @@ from app.schemas.product_schema import (
     ProductRead,
     ProductUpdate,
 )
+from app.api.deps import get_current_seller
+from app.models.md_User import User
 
 router = APIRouter()
 
@@ -52,7 +54,11 @@ async def get_product(product_id: int, conex: AsyncSession = Depends(get_db)):
 
 
 @router.post("/", response_model=ProductRead, status_code=status.HTTP_201_CREATED)
-async def create_product(product_data: ProductCreate, conex: AsyncSession = Depends(get_db)):
+async def create_product(
+    product_data: ProductCreate,
+    conex: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_seller)
+):
     try:
         nuevo = tbl_Product(**product_data.model_dump(exclude_unset=True))
         conex.add(nuevo)
@@ -85,7 +91,8 @@ async def create_product(product_data: ProductCreate, conex: AsyncSession = Depe
 async def update_product(
     product_id: int,
     product_data: ProductUpdate,
-    conex: AsyncSession = Depends(get_db)
+    conex: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_seller)
 ):
     try:
         stmt = select(tbl_Product).where(tbl_Product.id == product_id).options(selectinload(tbl_Product.distributor))
@@ -126,7 +133,11 @@ async def update_product(
 
 
 @router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_product(product_id: int, conex: AsyncSession = Depends(get_db)):
+async def delete_product(
+    product_id: int,
+    conex: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_seller)
+):
     try:
         stmt = select(tbl_Product).where(tbl_Product.id == product_id)
         result = await conex.execute(stmt)
