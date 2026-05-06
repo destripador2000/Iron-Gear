@@ -19,7 +19,7 @@ router = APIRouter()
 @router.get("/", response_model=list[ProductRead])
 async def get_products(conex: AsyncSession = Depends(get_db)):
     try:
-        stmt = select(tbl_Product)
+        stmt = select(tbl_Product).options(selectinload(tbl_Product.distributor))
         result = await conex.execute(stmt)
         products = result.scalars().all()
         return products
