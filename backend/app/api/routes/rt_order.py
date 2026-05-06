@@ -1,14 +1,23 @@
+from datetime import datetime
+from io import BytesIO
+
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import LETTER
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, joinedload
 from app.core.database import get_db
 from app.models.md_Order import Order as tbl_Order
 from app.models.md_OrderItem import OrderItem as tbl_OrderItem
 from app.models.md_Product import Product as tbl_Product
 from app.models.md_User import User, UserRole
-from app.api.deps import require_role
+from app.api.deps import get_current_user, require_role
 from app.schemas.order_schema import (
     OrderCreate,
     OrderRead,
@@ -29,7 +38,7 @@ async def get_orders(conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Order).options(
             selectinload(tbl_Order.user),
-            selectinload(tbl_Order.items)
+            selectinload(tbl_Order.items).joinedload(tbl_OrderItem.product).joinedload(tbl_Product.distributor)
         )
         result = await conex.execute(stmt)
         orders = result.scalars().all()
@@ -47,7 +56,7 @@ async def get_order(order_id: int, conex: AsyncSession = Depends(get_db)):
     try:
         stmt = select(tbl_Order).where(tbl_Order.id == order_id).options(
             selectinload(tbl_Order.user),
-            selectinload(tbl_Order.items)
+            selectinload(tbl_Order.items).joinedload(tbl_OrderItem.product).joinedload(tbl_Product.distributor)
         )
         result = await conex.execute(stmt)
         order = result.scalar_one_or_none()
@@ -78,7 +87,7 @@ async def create_order(order_data: OrderCreate, conex: AsyncSession = Depends(ge
         # Cargar relaciones explícitamente
         stmt = select(tbl_Order).where(tbl_Order.id == nuevo.id).options(
             selectinload(tbl_Order.user),
-            selectinload(tbl_Order.items)
+            selectinload(tbl_Order.items).joinedload(tbl_OrderItem.product).joinedload(tbl_Product.distributor)
         )
         result = await conex.execute(stmt)
         nuevo = result.scalar_one()
@@ -109,7 +118,7 @@ async def update_order(
     try:
         stmt = select(tbl_Order).where(tbl_Order.id == order_id).options(
             selectinload(tbl_Order.user),
-            selectinload(tbl_Order.items)
+            selectinload(tbl_Order.items).joinedload(tbl_OrderItem.product).joinedload(tbl_Product.distributor)
         )
         result = await conex.execute(stmt)
         order = result.scalar_one_or_none()
@@ -280,3 +289,106 @@ async def checkout_order(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error al procesar el pedido: {str(e)}"
         )
+
+
+@router.get("/{order_id}/invoice")
+async def get_order_invoice(
+    order_id: int,
+    current_user: User = Depends(get_current_user),
+    conex: AsyncSession = Depends(get_db)
+):
+    """
+    Genera y devuelve un PDF con la factura de un pedido.
+    Solo el propietario del pedido o un administrador pueden acceder.
+    """
+    stmt = select(tbl_Order).where(tbl_Order.id == order_id).options(
+        joinedload(tbl_Order.user),
+        selectinload(tbl_Order.items).joinedload(tbl_OrderItem.product)
+    )
+    result = await conex.execute(stmt)
+    order = result.scalar_one_or_none()
+
+    if not order:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Pedido no encontrado"
+        )
+
+    is_owner = order.user_id == current_user.id
+    is_admin = current_user.role == UserRole.ADMIN.value
+
+    if not is_owner and not is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tienes permiso para ver esta factura"
+        )
+
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=LETTER, rightMargin=72, leftMargin=72, topMargin=72, bottomMargin=72)
+    elements = []
+    styles = getSampleStyleSheet()
+
+    title_style = ParagraphStyle(
+        "CustomTitle",
+        parent=styles["Heading1"],
+        fontSize=24,
+        textColor=colors.HexColor("#1a1a1a"),
+        spaceAfter=30
+    )
+    elements.append(Paragraph("Invoice / Factura", title_style))
+
+    elements.append(Paragraph(f"<b>Order ID:</b> {order.id}", styles["Normal"]))
+    elements.append(Paragraph(f"<b>Date:</b> {order.created_at.strftime('%Y-%m-%d %H:%M:%S')}", styles["Normal"]))
+    elements.append(Paragraph(f"<b>Status:</b> {order.status}", styles["Normal"]))
+    elements.append(Spacer(1, 20))
+
+    elements.append(Paragraph("<b>Customer Info / Datos del Cliente</b>", styles["Heading2"]))
+    elements.append(Paragraph(f"Name: {order.user.name}", styles["Normal"]))
+    elements.append(Paragraph(f"Email: {order.user.email}", styles["Normal"]))
+    elements.append(Spacer(1, 20))
+
+    elements.append(Paragraph("<b>Items Purchased / Artículos Comprados</b>", styles["Heading2"]))
+
+    table_data = [["Product", "Quantity", "Unit Price", "Subtotal"]]
+    for item in order.items:
+        subtotal = item.frozen_price * item.quantity
+        table_data.append([
+            item.product.name,
+            str(item.quantity),
+            f"${item.frozen_price:.2f}",
+            f"${subtotal:.2f}"
+        ])
+
+    table = Table(table_data, colWidths=[2.5*inch, 1*inch, 1.25*inch, 1.25*inch])
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#f0f0f0")),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
+        ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("FONTSIZE", (0, 0), (-1, 0), 10),
+        ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+        ("BACKGROUND", (0, 1), (-1, -1), colors.white),
+        ("GRID", (0, 0), (-1, -1), 1, colors.HexColor("#dddddd")),
+        ("ALIGN", (2, 1), (-1, -1), "RIGHT"),
+        ("FONTNAME", (0, 1), (-1, -1), "Helvetica"),
+        ("FONTSIZE", (0, 1), (-1, -1), 9),
+    ]))
+    elements.append(table)
+    elements.append(Spacer(1, 20))
+
+    total_style = ParagraphStyle(
+        "Total",
+        parent=styles["Heading2"],
+        fontSize=14,
+        textColor=colors.HexColor("#2c2c2c")
+    )
+    elements.append(Paragraph(f"<b>Total Amount / Total:</b> ${float(order.total_amount):.2f}", total_style))
+
+    doc.build(elements)
+    buffer.seek(0)
+
+    return StreamingResponse(
+        buffer,
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"inline; filename=invoice_{order_id}.pdf"}
+    )
