@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 from io import BytesIO
 
@@ -24,6 +25,8 @@ from app.schemas.order_schema import (
     OrderUpdate,
     OrderCheckoutRequest,
     OrderCheckoutRead,
+    PaymentRequest,
+    PaymentResponse,
 )
 from app.schemas.order_item_schema import OrderItemRead, OrderItemCheckoutRead
 
@@ -391,4 +394,53 @@ async def get_order_invoice(
         buffer,
         media_type="application/pdf",
         headers={"Content-Disposition": f"inline; filename=invoice_{order_id}.pdf"}
+    )
+
+
+@router.post("/{order_id}/pay", response_model=PaymentResponse)
+async def pay_order(
+    order_id: int,
+    payment: PaymentRequest,
+    current_user: User = Depends(get_current_user),
+    conex: AsyncSession = Depends(get_db)
+):
+    # 1. Cargar orden con usuario
+    stmt = select(tbl_Order).where(tbl_Order.id == order_id)
+    result = await conex.execute(stmt)
+    order = result.scalar_one_or_none()
+
+    if not order:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Order not found"
+        )
+
+    # 2. Verificar propiedad
+    if order.user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You do not own this order"
+        )
+
+    # 3. Verificar estado pendiente
+    if order.status != "pendiente":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Order cannot be paid. Current status: {order.status}"
+        )
+
+    # 4. Simular procesamiento de pago
+    await asyncio.sleep(1)
+
+    # 5. Actualizar estado a "enviado"
+    order.status = "enviado"
+    await conex.commit()
+    await conex.refresh(order)
+
+    return PaymentResponse(
+        order_id=order.id,
+        status=order.status,
+        payment_method=payment.payment_method,
+        transaction_id=payment.transaction_id,
+        message="Payment processed successfully"
     )
