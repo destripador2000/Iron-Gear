@@ -2,9 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, joinedload
 from app.core.database import get_db
 from app.models.md_OrderItem import OrderItem as tbl_OrderItem
+from app.models.md_Product import Product as tbl_Product
 from app.schemas.order_item_schema import (
     OrderItemCreate,
     OrderItemRead,
@@ -17,7 +18,7 @@ router = APIRouter()
 @router.get("/", response_model=list[OrderItemRead])
 async def get_order_items(conex: AsyncSession = Depends(get_db)):
     try:
-        stmt = select(tbl_OrderItem).options(selectinload(tbl_OrderItem.product))
+        stmt = select(tbl_OrderItem).options(selectinload(tbl_OrderItem.product).joinedload(tbl_Product.distributor))
         result = await conex.execute(stmt)
         items = result.scalars().all()
         return items
@@ -32,7 +33,7 @@ async def get_order_items(conex: AsyncSession = Depends(get_db)):
 @router.get("/{item_id}", response_model=OrderItemRead)
 async def get_order_item(item_id: int, conex: AsyncSession = Depends(get_db)):
     try:
-        stmt = select(tbl_OrderItem).where(tbl_OrderItem.id == item_id).options(selectinload(tbl_OrderItem.product))
+        stmt = select(tbl_OrderItem).where(tbl_OrderItem.id == item_id).options(selectinload(tbl_OrderItem.product).joinedload(tbl_Product.distributor))
         result = await conex.execute(stmt)
         item = result.scalar_one_or_none()
         if not item:
@@ -60,7 +61,7 @@ async def create_order_item(item_data: OrderItemCreate, conex: AsyncSession = De
         await conex.refresh(nuevo)
         
         # Cargar relación explícitamente
-        stmt = select(tbl_OrderItem).where(tbl_OrderItem.id == nuevo.id).options(selectinload(tbl_OrderItem.product))
+        stmt = select(tbl_OrderItem).where(tbl_OrderItem.id == nuevo.id).options(selectinload(tbl_OrderItem.product).joinedload(tbl_Product.distributor))
         result = await conex.execute(stmt)
         nuevo = result.scalar_one()
         
@@ -88,7 +89,7 @@ async def update_order_item(
     conex: AsyncSession = Depends(get_db)
 ):
     try:
-        stmt = select(tbl_OrderItem).where(tbl_OrderItem.id == item_id).options(selectinload(tbl_OrderItem.product))
+        stmt = select(tbl_OrderItem).where(tbl_OrderItem.id == item_id).options(selectinload(tbl_OrderItem.product).joinedload(tbl_Product.distributor))
         result = await conex.execute(stmt)
         item = result.scalar_one_or_none()
         if not item:
