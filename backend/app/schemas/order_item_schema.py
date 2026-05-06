@@ -1,5 +1,5 @@
 from . import BaseSchema
-from .product_schema import ProductRead
+from .product_schema import ProductRead, ProductBase
 
 
 class OrderItemBase(BaseSchema):
@@ -27,3 +27,11 @@ class OrderItemRead(OrderItemBase):
     # Esquema para leer item - incluye ID y producto anidado
     id: int
     product: ProductRead | None = None
+
+
+class OrderItemCheckoutRead(BaseSchema):
+    # Esquema para checkout sin relaciones anidadas
+    id: int
+    product_id: int
+    quantity: int
+    frozen_price: float
