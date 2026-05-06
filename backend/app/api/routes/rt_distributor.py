@@ -4,11 +4,13 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from app.core.database import get_db
 from app.models.md_Distributor import Distributor as tbl_Distributor
+from app.models.md_User import User
 from app.schemas.distributor_schema import (
     DistributorCreate,
     DistributorRead,
     DistributorUpdate,
 )
+from app.api.deps import get_current_seller
 
 router = APIRouter()
 
@@ -51,7 +53,11 @@ async def get_distributor(distributor_id: int, conex: AsyncSession = Depends(get
 
 
 @router.post("/", response_model=DistributorRead, status_code=status.HTTP_201_CREATED)
-async def create_distributor(distributor_data: DistributorCreate, conex: AsyncSession = Depends(get_db)):
+async def create_distributor(
+    distributor_data: DistributorCreate,
+    conex: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_seller)
+):
     try:
         nuevo = tbl_Distributor(**distributor_data.model_dump(exclude_unset=True))
         conex.add(nuevo)
@@ -78,7 +84,8 @@ async def create_distributor(distributor_data: DistributorCreate, conex: AsyncSe
 async def update_distributor(
     distributor_id: int,
     distributor_data: DistributorUpdate,
-    conex: AsyncSession = Depends(get_db)
+    conex: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_seller)
 ):
     try:
         stmt = select(tbl_Distributor).where(tbl_Distributor.id == distributor_id)
@@ -119,7 +126,11 @@ async def update_distributor(
 
 
 @router.delete("/{distributor_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_distributor(distributor_id: int, conex: AsyncSession = Depends(get_db)):
+async def delete_distributor(
+    distributor_id: int,
+    conex: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_seller)
+):
     try:
         stmt = select(tbl_Distributor).where(tbl_Distributor.id == distributor_id)
         result = await conex.execute(stmt)
