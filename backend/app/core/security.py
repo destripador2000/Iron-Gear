@@ -52,8 +52,11 @@ def decode_access_token(token: str) -> TokenData:
         settings.secret_key,
         algorithms=[settings.algorithm]
     )
+    sub = payload.get("sub")
+    if sub is None:
+        raise ValueError("Token missing 'sub' field")
     return TokenData(
-        user_id=payload.get("sub"),
+        user_id=int(sub),
         email=payload.get("email"),
         role=payload.get("role")
     )
