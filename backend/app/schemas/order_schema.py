@@ -1,19 +1,38 @@
+from pydantic import Field
 from . import BaseSchema
 from .user_schema import UserRead
-from .order_item_schema import OrderItemRead
+from .order_item_schema import OrderItemRead, OrderItemCheckoutRead
 from datetime import datetime
 
 
 class OrderBase(BaseSchema):
-    # Campos base para pedidos
     user_id: int
     status: str = "pendiente"
     total_amount: float = 0
 
 
 class OrderCreate(OrderBase):
-    # Esquema para crear pedido - sin ID ni fechas
     pass
+
+
+class OrderItemRequest(BaseSchema):
+    product_id: int
+    quantity: int = Field(gt=0)
+
+
+class OrderCheckoutRequest(BaseSchema):
+    items: list[OrderItemRequest] = Field(min_length=1)
+
+
+class OrderCheckoutRead(BaseSchema):
+    # Esquema para respuesta de checkout sin relaciones anidadas
+    id: int
+    user_id: int
+    status: str
+    total_amount: float
+    created_at: datetime
+    updated_at: datetime
+    items: list[OrderItemCheckoutRead] = []
 
 
 class OrderUpdate(BaseSchema):
