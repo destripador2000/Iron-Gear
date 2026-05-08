@@ -10,9 +10,9 @@ import { ClothingPage } from './presentation/pages/clothing/ClothingPage';
 import { MachinesPage } from './presentation/pages/machines/MachinesPage';
 import { SupplementsPage } from './presentation/pages/supplements/SupplementsPage';
 import { PharmacologyPage } from './presentation/pages/pharmacology/PharmacologyPage';
-import {type Product } from './domain/product/types';
+import type { ProductMock } from './domain/product/types';
 
-const mockProducts: Product[] = [
+const mockProducts: ProductMock[] = [
   {
     id: '1',
     title: 'Olympic Weight Plates Set',
