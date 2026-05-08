@@ -3,58 +3,47 @@ import styles from './PharmacologyPage.module.css';
 import { Header } from '../../components/header/Header';
 import { Footer } from '../../components/footer/Footer';
 import { Sidebar } from '../../components/sidebar/Sidebar';
-import { type Product } from '../../../domain/product/types';
+import { useProducts } from '../../../infrastructure/hooks/useProducts';
+import { CATEGORIES } from '../../../domain/product/constants';
 
 interface Props {
   currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology';
   onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology') => void;
 }
 
-const pharmacologyProducts: Product[] = [
-  {
-    id: '1',
-    title: 'Neuro-Peak 500',
-    price: 189.00,
-    rating: 4.9,
-    reviews: 342,
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuABYLMenPoer7wbg8-h_boQYjK8Ebn0t9TPtZnmSJKJBNCDHgoh6kOIGrjthlXG38IqlEFPmFABuIVJUvH9HtMcUedrjti00LDPEM95baC8rTM3PApheRTx56lFjMuWcAue86YjfQObjqeXnNxUn48BZ6opRrwW3wCla-l6VzuAnc-R2zfuPxTr5X8cWanhV6igvMTddPGfIOi_MQJf5-oBjrR02T3b5XguxoC7N6vSi9mW1alel6JsN2MSxjttpzKL-MRjbQOs4Jma',
-    imageAlt: 'Neuro-Peak 500',
-    brand: 'Cognitive Support',
-    isPremium: true
-  },
-  {
-    id: '2',
-    title: 'Iso-Recovery RX',
-    price: 145.00,
-    rating: 4.8,
-    reviews: 218,
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB2xTOPmZNtDsZHAvs-xjyUIuoKmcUOGdcikY0WJ8-qkLvCXKDyQowv4gvP7_CPo0G9TajSAqjz0ZAzUi5lkhArx7ivWGCPG33jO7X0zCUOPysfTpPIvdqRfqaw_6gZe9SWQ0qxGOfKX4y60hNYTSjZobDnmU8IiOn_Cn645OnwC9s6vBRA4_nVdLoez-7MiobCx3Syj7Ihl-spzgAdGRiDXlsKqc67zh3NGG-KBAOt7jTjsagjPXFHoztJlnDoYL0vsTslFwBRCxgZ',
-    imageAlt: 'Iso-Recovery RX',
-    brand: 'Intense Recovery'
-  },
-  {
-    id: '3',
-    title: 'Anabolic Primer',
-    price: 312.00,
-    rating: 4.7,
-    reviews: 156,
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDx5HIWSvL_kDFOvVUbpmeaVak7beZo0_fjQ6NJg0qKDkl6zh-nQUDP293qCjYmaIbsBTzbwh2hoV_PreYnZnwhHW7TyET4FQlJzgfRuVoCjjEvSsp2hmH3dhceVdpF16L4SD7Dofhr2-SQxyl-K5Qz11R87FmPp6Fm9XDafxf2VnScxCL9LY2dSWzHAxDXoCmfrwiOtqVKRoF0QjyBZMP_q_IF03a-kD01PGH8mVrWm7adg7sywrClrZOVY7N0c8kek6hwQ_BVSRBx',
-    imageAlt: 'Anabolic Primer',
-    brand: 'Hormonal Optimization'
-  },
-  {
-    id: '4',
-    title: 'HGH Supp-Max',
-    price: 450.00,
-    rating: 4.6,
-    reviews: 89,
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwVzi70SosQ3IPnIVSGjFJEz74FDnPhZlPPWYa4lOJQdb0WzZseiG7D-07EO7CZn6iq73B6XI8jD5eEnSOjLhF5vQXQwyVLGabEPgu62P-lRsplBZc9_aY5zospJDGCcFI03JoJEmYITO71PQBwuj_ew_WWhovIuMwuyiScRW5UG878BcQQhkaEDrsMf5VrPWii2mHzEP9nSFGSBpBZLJuXP3DYY74m5-ozhclQk0TDDitqBeqOVlvH5yf_aGJTvJSImUXP1is053P',
-    imageAlt: 'HGH Supp-Max',
-    brand: 'Growth Factor'
-  }
-];
+const CATEGORY = CATEGORIES.PHARMACOLOGY;
+
+const LoadingSkeleton = () => (
+  <div className={styles.skeletonGrid}>
+    {Array.from({ length: 4 }).map((_, index) => (
+      <div key={index} className={styles.skeletonCard}>
+        <div className={styles.skeletonImage} />
+        <div className={styles.skeletonInfo}>
+          <div className={styles.skeletonTitle} />
+          <div className={styles.skeletonPrice} />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void }) => (
+  <div className={styles.errorContainer}>
+    <span className={`${styles.errorIcon} material-symbols-outlined`}>error</span>
+    <p className={styles.errorMessage}>{message}</p>
+    <button className={styles.retryButton} onClick={onRetry}>
+      Reintentar
+    </button>
+  </div>
+);
 
 export const PharmacologyPage: React.FC<Props> = ({ currentPage = 'pharmacology', onNavigate }) => {
+  const { products, loading, error } = useProducts(CATEGORY);
+
+  const handleRetry = () => {
+    window.location.reload();
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header currentPage={currentPage} onNavigate={onNavigate} />
@@ -74,29 +63,50 @@ export const PharmacologyPage: React.FC<Props> = ({ currentPage = 'pharmacology'
             </div>
           </div>
 
-          <div className={styles.productGrid}>
-            {pharmacologyProducts.map((product) => (
-              <article key={product.id} className={styles.productCard}>
-                <div className={styles.imageWrapper}>
-                  <img 
-                    src={product.imageUrl} 
-                    alt={product.imageAlt} 
-                    className={styles.productImage}
-                  />
-                  <div className={styles.quickAdd}>
-                    <button className={styles.quickAddButton}>
-                      <span className="material-symbols-outlined">add_shopping_cart</span>
-                    </button>
+          {loading && <LoadingSkeleton />}
+
+          {error && <ErrorState message={error} onRetry={handleRetry} />}
+
+          {!loading && !error && (
+            <div className={styles.productGrid}>
+              {products.map((product) => (
+                <article key={product.id} className={styles.productCard}>
+                  <div className={styles.imageWrapper}>
+                    <img 
+                      src={product.imageUrl} 
+                      alt={product.imageAlt} 
+                      className={styles.productImage}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://placehold.co/400x400/e5e7eb/9ca3af?text=Imagen+no+disponible';
+                      }}
+                    />
+                    <div className={styles.quickAdd}>
+                      <button className={styles.quickAddButton}>
+                        <span className="material-symbols-outlined">shopping_cart</span>
+                        AGREGAR AL CARRITO
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div className={styles.productInfo}>
-                  <h4 className={styles.productTitle}>{product.title}</h4>
-                  <p className={styles.productBrand}>{product.brand}</p>
-                  <p className={styles.productPrice}>${product.price.toFixed(2)}</p>
-                </div>
-              </article>
-            ))}
-          </div>
+                  <div className={styles.productInfo}>
+                    <h4 className={styles.productTitle}>{product.name}</h4>
+                    {product.description && (
+                      <p className={styles.productDescription}>{product.description}</p>
+                    )}
+                    {product.distributor && (
+                      <p className={styles.productBrand}>Proveedor: {product.distributor.name}</p>
+                    )}
+                    <p className={styles.productPrice}>${product.price.toFixed(2)}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+
+          {!loading && !error && products.length === 0 && (
+            <div className={styles.errorContainer}>
+              <p className={styles.errorMessage}>No se encontraron productos en esta categoría.</p>
+            </div>
+          )}
         </main>
       </div>
       <Footer />
