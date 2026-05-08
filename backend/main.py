@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routes import rt_product, rt_user, rt_distributor, rt_order, rt_order_item, auth
+from app.api.routes import rt_product, rt_user, rt_distributor, rt_order, rt_order_item, auth, inventory, reports
 from app.core.config import settings
 
 app = FastAPI(
@@ -25,3 +25,5 @@ app.include_router(rt_distributor.router, prefix="/router/rt_distributors", tags
 app.include_router(rt_order.router, prefix="/router/rt_orders", tags=["orders"])
 app.include_router(rt_order_item.router, prefix="/router/rt_order_items", tags=["order_items"])
 app.include_router(auth.router, prefix="/api", tags=["auth"])
+app.include_router(inventory.router, prefix="/api")
+app.include_router(reports.router, prefix="/api")
