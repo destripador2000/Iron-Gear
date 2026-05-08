@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from './ProductCard.module.css';
-import {type Product } from '../../../domain/product/types';
+import type { ProductMock } from '../../../domain/product/types';
 
 interface Props {
-  product: Product;
+  product: ProductMock;
   isFeatured?: boolean;
 }
 
