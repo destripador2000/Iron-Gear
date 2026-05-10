@@ -2,14 +2,19 @@ import React from 'react';
 import styles from './Header.module.css';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology') => void;
+  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account';
+  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account') => void;
 }
 
 export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) => {
-  const handleNavClick = (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology') => (e: React.MouseEvent) => {
+  const handleNavClick = (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account') => (e: React.MouseEvent) => {
     e.preventDefault();
     onNavigate?.(page);
+  };
+
+  const handlePersonClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onNavigate?.('account');
   };
 
   return (
@@ -28,7 +33,7 @@ export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) =>
           </div>
 
           <div className={styles.actions}>
-            <button className={styles.iconBtn}>
+            <button className={styles.iconBtn} onClick={handlePersonClick}>
               <span className="material-symbols-outlined">person</span>
             </button>
             <button className={styles.iconBtn}>
