@@ -11,6 +11,7 @@ import { MachinesPage } from './presentation/pages/machines/MachinesPage';
 import { SupplementsPage } from './presentation/pages/supplements/SupplementsPage';
 import { PharmacologyPage } from './presentation/pages/pharmacology/PharmacologyPage';
 import { AccountPage } from './presentation/pages/account/AccountPage';
+import { RegisterPage } from './presentation/pages/account/RegisterPage';
 import type { ProductMock } from './domain/product/types';
 
 const mockProducts: ProductMock[] = [
@@ -95,7 +96,7 @@ const mockProducts: ProductMock[] = [
   }
 ];
 
-type Page = 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account';
+type Page = 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -126,6 +127,10 @@ const App: React.FC = () => {
 
   if (currentPage === 'account') {
     return <AccountPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+  }
+
+  if (currentPage === 'register') {
+    return <RegisterPage currentPage={currentPage} onNavigate={setCurrentPage} />;
   }
 
   return (
