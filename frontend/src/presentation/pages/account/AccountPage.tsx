@@ -6,8 +6,8 @@ import { FormInput } from '../../components/form/FormInput';
 import { TrustBadge } from '../../components/trustBadge/TrustBadge';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account') => void;
+  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register';
+  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register') => void;
 }
 
 const trustBadges = [
@@ -71,7 +71,7 @@ export const AccountPage: React.FC<Props> = ({ currentPage = 'account', onNaviga
           <div className={styles.footer}>
             <p className={styles.footerText}>
               ¿Nuevo en Iron Gear?
-              <a href="#" className={styles.link}>Crea una cuenta</a>
+              <a href="#" className={styles.link} onClick={(e) => { e.preventDefault(); onNavigate?.('register'); }}>Crea una cuenta</a>
             </p>
           </div>
         </div>
