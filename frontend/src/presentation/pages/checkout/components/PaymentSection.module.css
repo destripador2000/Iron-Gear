@@ -1,0 +1,129 @@
+.section {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.icon {
+  color: var(--color-primary);
+  font-size: 28px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  background-color: var(--bg-surface);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.option:hover {
+  border-color: var(--color-primary);
+}
+
+.optionSelected {
+  border-color: var(--color-primary);
+  background-color: #fff1eb;
+}
+
+.radio {
+  margin-top: 4px;
+  accent-color: var(--color-primary);
+}
+
+.optionContent {
+  flex: 1;
+}
+
+.optionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.optionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.optionIcon {
+  color: var(--text-muted);
+  font-size: 24px;
+}
+
+.cardFields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.cardFieldFull {
+  grid-column: 1 / -1;
+}
+
+.cardFieldHalf {
+  grid-column: span 1;
+}
+
+.paypalOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.paypalTitle {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-main);
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  color: #dc2626;
+}
+
+.errorMessage span {
+  font-size: 20px;
+}
+
+.errorMessage p {
+  margin: 0;
+  font-size: 14px;
+}
