@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './App.module.css';
 import { AuthProvider } from './infrastructure/context/AuthContext';
 import { CartProvider } from './infrastructure/context/CartContext';
 import { Header } from './presentation/components/header/Header';
 import { Footer } from './presentation/components/footer/Footer';
 import { Sidebar } from './presentation/components/sidebar/Sidebar';
-import { ProductCard } from './presentation/components/product/ProductCard';
+import { AddToCartButton } from './presentation/components/product/AddToCartButton';
 import { DumbbellsPage } from './presentation/pages/dumbbells/DumbbellsPage';
 import { BarsPage } from './presentation/pages/bars/BarsPage';
 import { ClothingPage } from './presentation/pages/clothing/ClothingPage';
@@ -17,93 +17,25 @@ import { RegisterPage } from './presentation/pages/account/RegisterPage';
 import { CartPage } from './presentation/pages/cart/CartPage';
 import { CheckoutPage } from './presentation/pages/checkout/CheckoutPage';
 import { DashboardPage } from './presentation/pages/admin/DashboardPage';
-import type { ProductMock } from './domain/product/types';
+import { productService, mapProductToFrontend } from './infrastructure/api/productService';
+import type { Product } from './domain/product/types';
 import type { Page } from './domain/types';
-
-const mockProducts: ProductMock[] = [
-  {
-    id: '1',
-    title: 'Olympic Weight Plates Set',
-    price: 299.00,
-    rating: 4.8,
-    reviews: 0,
-    imageUrl: 'https://via.placeholder.com/600x400',
-    imageAlt: 'Olympic Plates',
-    description: 'Construidos con uretano de alta densidad para máxima durabilidad y absorción de impacto. Ideales para levantamientos explosivos.',
-    isPremium: true
-  },
-  {
-    id: '2',
-    title: 'Whey Protein Isolated 5lb',
-    price: 79.99,
-    rating: 4.9,
-    reviews: 0,
-    imageUrl: 'https://via.placeholder.com/300x300',
-    imageAlt: 'Whey Protein'
-  },
-  {
-    id: '3',
-    title: 'Adjustable Pro Bench G3',
-    price: 199.00,
-    rating: 4.7,
-    reviews: 0,
-    imageUrl: 'https://via.placeholder.com/300x300',
-    imageAlt: 'Adjustable Bench'
-  },
-  {
-    id: '4',
-    title: 'Barra Olímpica de Acero',
-    price: 149.99,
-    rating: 4.6,
-    reviews: 0,
-    imageUrl: 'https://via.placeholder.com/300x300',
-    imageAlt: 'Barra Olímpica',
-    description: 'Barra de acero resistente con capacidad de 700kg. Acabado cromado anti-corrosión.'
-  },
-  {
-    id: '5',
-    title: 'Kettlebell Competition 16kg',
-    price: 89.99,
-    rating: 4.5,
-    reviews: 0,
-    imageUrl: 'https://via.placeholder.com/300x300',
-    imageAlt: 'Kettlebell',
-    description: 'Kettlebell de competencia con mango ergonómico. Fundición de alta calidad.'
-  },
-  {
-    id: '6',
-    title: 'Cinturón de Cuero Profesional',
-    price: 59.99,
-    rating: 4.8,
-    reviews: 0,
-    imageUrl: 'https://via.placeholder.com/300x300',
-    imageAlt: 'Cinturón',
-    description: 'Cinturón de cuero genuino con hebilla de doble pin. Soporte lumbar reforzado.'
-  },
-  {
-    id: '7',
-    title: 'Mancuernas Ajustables 5-25kg',
-    price: 249.00,
-    rating: 4.7,
-    reviews: 0,
-    imageUrl: 'https://via.placeholder.com/300x300',
-    imageAlt: 'Mancuernas Ajustables',
-    description: 'Sistema de ajuste rápido con incrementos de 2.5kg. Platos de acero recubiertos.'
-  },
-  {
-    id: '8',
-    title: 'Guantes de Levantamiento Pro',
-    price: 34.99,
-    rating: 4.4,
-    reviews: 0,
-    imageUrl: 'https://via.placeholder.com/300x300',
-    imageAlt: 'Guantes',
-    description: 'Guantes con soporte de muñeca y palma reforzada. Material transpirable.'
-  }
-];
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [homeProducts, setHomeProducts] = useState<{ products: Product[]; loading: boolean }>({ products: [], loading: true });
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const result = await productService.getProducts();
+      if (result.data) {
+        setHomeProducts({ products: result.data.slice(0, 5), loading: false });
+      } else {
+        setHomeProducts({ products: [], loading: false });
+      }
+    };
+    fetchProducts();
+  }, []);
 
   if (currentPage === 'dumbbells') {
     return (
@@ -237,15 +169,50 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              <div className={styles.productGrid}>
-                {mockProducts.map((product, index) => (
-                  <ProductCard 
-                    key={product.id} 
-                    product={product} 
-                    isFeatured={index === 0} 
-                  />
-                ))}
-              </div>
+              {homeProducts.loading ? (
+                <div className={styles.loading}>Cargando productos...</div>
+              ) : (
+                <div className={styles.productGrid}>
+                  {homeProducts.products.map((product) => {
+                    const frontendProduct = mapProductToFrontend(product);
+                    return (
+                      <article key={product.id} className={styles.productCard}>
+                        <div className={styles.imageWrapper}>
+                          <img 
+                            src={frontendProduct.imageUrl} 
+                            alt={frontendProduct.imageAlt} 
+                            className={styles.productImage}
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://placehold.co/400x400/e5e7eb/9ca3af?text=Imagen+no+disponible';
+                            }}
+                          />
+                          <div className={styles.quickAdd}>
+                            <AddToCartButton
+                              product={product}
+                              imageUrl={frontendProduct.imageUrl}
+                              imageAlt={frontendProduct.imageAlt}
+                            />
+                          </div>
+                        </div>
+                        <div className={styles.productInfo}>
+                          <div className={styles.stockBadge} data-stock={product.stock}>
+                            <span className="material-symbols-outlined">inventory_2</span>
+                            {product.stock === 0 ? 'Agotado' : product.stock <= 5 ? `Poco stock (${product.stock})` : `En stock (${product.stock})`}
+                          </div>
+                          <h3 className={styles.productTitle}>{product.name}</h3>
+                          {product.description && (
+                            <p className={styles.productDescription}>{product.description}</p>
+                          )}
+                          {product.distributor && (
+                            <p className={styles.productSupplier}>Proveedor: {product.distributor.name}</p>
+                          )}
+                          <p className={styles.productPrice}>${product.price.toFixed(2)}</p>
+                        </div>
+                      </article>
+                    );
+                  })}
+                </div>
+              )}
             </section>
           </main>
           <Footer />
