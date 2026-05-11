@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from app.core.database import get_db
+from app.core.security import get_password_hash
 from app.models.md_User import User as tbl_User
 from app.schemas.user_schema import (
     UserCreate,
@@ -53,7 +54,10 @@ async def get_user(user_id: int, conex: AsyncSession = Depends(get_db)):
 @router.post("/", response_model=UserRead, status_code=status.HTTP_201_CREATED)
 async def create_user(user_data: UserCreate, conex: AsyncSession = Depends(get_db)):
     try:
-        nuevo = tbl_User(**user_data.model_dump(exclude_unset=True))
+        user_dict = user_data.model_dump(exclude_unset=True)
+        if 'password' in user_dict:
+            user_dict['password_hash'] = get_password_hash(user_dict.pop('password'))
+        nuevo = tbl_User(**user_dict)
         conex.add(nuevo)
         await conex.commit()
         await conex.refresh(nuevo)
