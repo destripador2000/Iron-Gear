@@ -59,15 +59,8 @@ export const ProductsView: React.FC = () => {
   };
 
   // Crear producto
-  const handleCreate = async (data: Record<string, unknown>) => {
-    const result = await productAdminService.createProduct({
-      name: data.name as string,
-      price: data.price as number,
-      stock: data.stock as number,
-      category: data.category as string,
-      distributor_id: data.distributor_id as number,
-      description: data.description as string | undefined,
-    });
+  const handleCreate = async (formData: FormData) => {
+    const result = await productAdminService.createProduct(formData);
     if (result.error || !result.data) {
       return { error: result.error || 'Error al crear' };
     }
@@ -77,16 +70,9 @@ export const ProductsView: React.FC = () => {
   };
 
   // Actualizar producto
-  const handleUpdate = async (data: Record<string, unknown>) => {
+  const handleUpdate = async (formData: FormData) => {
     if (!selectedProduct) return { error: 'No hay producto seleccionado' };
-    const result = await productAdminService.updateProduct(selectedProduct.id, {
-      name: data.name as string | undefined,
-      price: data.price as number | undefined,
-      stock: data.stock as number | undefined,
-      category: data.category as string | undefined,
-      distributor_id: data.distributor_id as number | undefined,
-      description: data.description as string | undefined,
-    });
+    const result = await productAdminService.updateProduct(selectedProduct.id, formData);
     if (result.error || !result.data) {
       return { error: result.error || 'Error al actualizar' };
     }

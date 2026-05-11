@@ -53,10 +53,10 @@ export const productAdminService = {
     }
   },
 
-  /**
-   * Crea un nuevo producto (requiere auth)
-   */
-  async createProduct(product: CreateProductData): Promise<ApiResponse<Product>> {
+/**
+    * Crea un nuevo producto (requiere auth)
+    */
+  async createProduct(formData: FormData): Promise<ApiResponse<Product>> {
     try {
       const token = authService.getToken();
       if (!token) return { data: null, error: 'No autenticado' };
@@ -64,10 +64,9 @@ export const productAdminService = {
       const response = await fetch(PRODUCTS_ENDPOINT, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(product),
+        body: formData,
       });
 
       if (response.status === 401) {
@@ -89,7 +88,7 @@ export const productAdminService = {
   /**
    * Actualiza un producto existente (requiere auth)
    */
-  async updateProduct(productId: number, updates: UpdateProductData): Promise<ApiResponse<Product>> {
+  async updateProduct(productId: number, formData: FormData): Promise<ApiResponse<Product>> {
     try {
       const token = authService.getToken();
       if (!token) return { data: null, error: 'No autenticado' };
@@ -97,10 +96,9 @@ export const productAdminService = {
       const response = await fetch(`${PRODUCTS_ENDPOINT}/${productId}`, {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(updates),
+        body: formData,
       });
 
       if (response.status === 401) {

@@ -5,7 +5,7 @@ import styles from './ProductFormModal.module.css';
 interface Props {
   title: string;
   product?: Product;
-  onSubmit: (data: Record<string, unknown>) => Promise<{ error?: string } | null>;
+  onSubmit: (data: FormData) => Promise<{ error?: string } | null>;
   onClose: () => void;
 }
 
@@ -18,21 +18,33 @@ export const ProductFormModal: React.FC<Props> = ({ title, product, onSubmit, on
     category: product?.category || '',
     distributor_id: product?.distributor_id?.toString() || '',
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(product?.image_url || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Categorías predefinidas según el backend
   const categories = ['mancuernas', 'barras', 'ropa', 'máquinas', 'suplementos', 'farmacología'];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // Validar campos requeridos
     if (!formData.name.trim() || !formData.price || !formData.category || !formData.distributor_id) {
       setError('Los campos Nombre, Precio, Categoría y Distribuidor son requeridos');
       return;
@@ -40,17 +52,19 @@ export const ProductFormModal: React.FC<Props> = ({ title, product, onSubmit, on
 
     setIsSubmitting(true);
 
-    // Enviar datos según sea creación o edición
-    const data: Record<string, unknown> = {
-      name: formData.name.trim(),
-      description: formData.description.trim() || undefined,
-      price: parseFloat(formData.price),
-      stock: parseInt(formData.stock) || 0,
-      category: formData.category,
-      distributor_id: parseInt(formData.distributor_id),
-    };
+    const formDataObj = new FormData();
+    formDataObj.append('name', formData.name.trim());
+    formDataObj.append('description', formData.description.trim() || '');
+    formDataObj.append('price', formData.price);
+    formDataObj.append('stock', formData.stock);
+    formDataObj.append('category', formData.category);
+    formDataObj.append('distributor_id', formData.distributor_id);
+    
+    if (imageFile) {
+      formDataObj.append('image', imageFile);
+    }
 
-    const result = await onSubmit(data);
+    const result = await onSubmit(formDataObj);
     if (result?.error) {
       setError(result.error);
     }
@@ -86,6 +100,25 @@ export const ProductFormModal: React.FC<Props> = ({ title, product, onSubmit, on
               placeholder="Nombre del producto"
               required
             />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="image">Imagen del producto</label>
+            <div className={styles.imageUpload}>
+              {imagePreview && (
+                <div className={styles.imagePreview}>
+                  <img src={imagePreview} alt="Preview" />
+                </div>
+              )}
+              <input
+                id="image"
+                name="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className={styles.fileInput}
+              />
+            </div>
           </div>
 
           <div className={styles.formGroup}>

@@ -16,6 +16,7 @@ export interface Product {
   is_discount: boolean;
   stock: number;
   category: string;
+  image_url: string | null;
   distributor: Distributor | null;
 }
 
