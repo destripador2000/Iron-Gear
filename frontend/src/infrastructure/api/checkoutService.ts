@@ -103,7 +103,7 @@ export const checkoutService = {
   async processPayment(orderId: number, paymentData: PaymentRequest): Promise<{ data?: PaymentResponse; error?: string; status?: number }> {
     try {
       const token = authService.getToken();
-      
+
       if (!token) {
         return { error: 'Debes iniciar sesión para realizar el pedido', status: 401 };
       }
@@ -123,14 +123,54 @@ export const checkoutService = {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        return { 
-          error: errorData.detail || `Error al procesar el pago (${response.status})`, 
-          status: response.status 
+        return {
+          error: errorData.detail || `Error al procesar el pago (${response.status})`,
+          status: response.status
         };
       }
 
       const data: PaymentResponse = await response.json();
       return { data, status: response.status };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error de conexión';
+      return { error: errorMessage };
+    }
+  },
+
+  /**
+   * Descarga la factura PDF de una orden
+   * GET /orders/{order_id}/invoice
+   */
+  async downloadInvoice(orderId: number): Promise<{ blob?: Blob; error?: string }> {
+    try {
+      const token = authService.getToken();
+
+      if (!token) {
+        return { error: 'Debes iniciar sesión para descargar la factura' };
+      }
+
+      const response = await fetch(`${ORDERS_BASE}/${orderId}/invoice`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 401) {
+        return { error: 'Sesión expirada. Por favor inicia sesión de nuevo.' };
+      }
+
+      if (!response.ok) {
+        return { error: `Error al obtener la factura (${response.status})` };
+      }
+
+      const blob = await response.blob();
+
+      if (!blob || blob.size === 0) {
+        return { error: 'La factura está vacía o no está disponible' };
+      }
+
+      return { blob };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Error de conexión';
       return { error: errorMessage };
