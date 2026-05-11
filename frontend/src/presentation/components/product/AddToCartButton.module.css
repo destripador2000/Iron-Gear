@@ -30,3 +30,16 @@
 .added:hover {
   background-color: var(--color-secondary);
 }
+
+.outOfStock {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.outOfStock:hover {
+  background-color: #9ca3af;
+}
+
+.outOfStock span {
+  font-size: 18px;
+}

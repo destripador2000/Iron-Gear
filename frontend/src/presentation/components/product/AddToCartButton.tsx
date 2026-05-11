@@ -22,10 +22,22 @@ export const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 
   const isAdded = isInCart(product.id);
   const currentQty = getItemQuantity(product.id);
+  const isOutOfStock = product.stock === 0;
 
   const handleClick = () => {
-    addToCart(product, quantity, imageUrl, imageAlt);
+    if (!isOutOfStock) {
+      addToCart(product, quantity, imageUrl, imageAlt);
+    }
   };
+
+  if (isOutOfStock) {
+    return (
+      <button className={`${styles.button} ${styles.outOfStock} ${className}`} type="button" disabled>
+        <span className="material-symbols-outlined">block</span>
+        Agotado
+      </button>
+    );
+  }
 
   if (isAdded) {
     return (
