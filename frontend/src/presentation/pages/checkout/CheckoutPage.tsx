@@ -37,6 +37,9 @@ export const CheckoutPage: React.FC<Props> = ({ currentPage = 'checkout', onNavi
   const [isProcessing, setIsProcessing] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [successOrderId, setSuccessOrderId] = useState<number | null>(null);
+  const [isDownloadingInvoice, setIsDownloadingInvoice] = useState(false);
+  const [invoiceError, setInvoiceError] = useState<string | null>(null);
 
   const handleShippingChange = (field: keyof ShippingData, value: string) => {
     setShippingData((prev) => ({ ...prev, [field]: value }));
@@ -102,6 +105,39 @@ export const CheckoutPage: React.FC<Props> = ({ currentPage = 'checkout', onNavi
   };
 
   /**
+   * Maneja la descarga de la factura PDF
+   */
+  const handleDownloadInvoice = async () => {
+    if (!successOrderId) return;
+
+    setIsDownloadingInvoice(true);
+    setInvoiceError(null);
+
+    try {
+      const result = await checkoutService.downloadInvoice(successOrderId);
+
+      if (result.error || !result.blob) {
+        setInvoiceError(result.error || 'Error al descargar la factura');
+        return;
+      }
+
+      const url = URL.createObjectURL(result.blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `invoice_order_${successOrderId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error al descargar factura:', error);
+      setInvoiceError('Error al descargar la factura. Por favor intenta de nuevo.');
+    } finally {
+      setIsDownloadingInvoice(false);
+    }
+  };
+
+  /**
    * Maneja el proceso de pago completo:
    * 1. Crear orden en backend
    * 2. Procesar pago
@@ -143,11 +179,12 @@ export const CheckoutPage: React.FC<Props> = ({ currentPage = 'checkout', onNavi
       }
 
       clearCart();
+      setSuccessOrderId(orderId);
       setSuccessMessage('¡Pedido realizado con éxito! Tu orden ha sido procesada.');
-      
+
       setTimeout(() => {
         onNavigate?.('home');
-      }, 3000);
+      }, 180000);
 
     } catch (error) {
       console.error('Error en el proceso de pago:', error);
@@ -157,7 +194,7 @@ export const CheckoutPage: React.FC<Props> = ({ currentPage = 'checkout', onNavi
     }
   };
 
-  const isEmpty = items.length === 0;
+  const isEmpty = items.length === 0 && !successMessage;
 
   if (isEmpty) {
     return (
@@ -204,6 +241,29 @@ export const CheckoutPage: React.FC<Props> = ({ currentPage = 'checkout', onNavi
           <div className={styles.successBanner}>
             <span className="material-symbols-outlined">check_circle</span>
             <p>{successMessage}</p>
+            {successOrderId && (
+              <button
+                className={styles.downloadInvoiceBtn}
+                onClick={handleDownloadInvoice}
+                disabled={isDownloadingInvoice}
+                type="button"
+              >
+                {isDownloadingInvoice ? (
+                  <>
+                    <span className={styles.spinner}></span>
+                    Descargando...
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined">download</span>
+                    Descargar Factura
+                  </>
+                )}
+              </button>
+            )}
+            {invoiceError && (
+              <p className={styles.invoiceError}>{invoiceError}</p>
+            )}
           </div>
         )}
 

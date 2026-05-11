@@ -135,3 +135,53 @@
   font-size: 14px;
   font-weight: 500;
 }
+
+.downloadInvoiceBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding: 10px 16px;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.downloadInvoiceBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.downloadInvoiceBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.downloadInvoiceBtn span {
+  font-size: 18px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.invoiceError {
+  margin: 8px 0 0 0;
+  color: #dc2626;
+  font-size: 12px;
+}
