@@ -5,6 +5,7 @@ import { hasPermission, UserRoles } from '../../../domain/auth/roles';
 import { AdminSidebar } from './components/AdminSidebar';
 import { AccessDenied } from './components/AccessDenied';
 import { ProductsView } from './components/ProductsView';
+import { Overview } from './components/Overview';
 
 interface AdminLayoutProps {
   currentSection?: 'summary' | 'products' | 'sales' | 'admin';
@@ -86,13 +87,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ currentSection = 'prod
   );
 };
 
-// Componentes dummy para cada sección
-const SummaryView: React.FC = () => (
-  <div className={styles.dummyView}>
-    <h2>Resumen y Reportes</h2>
-    <p>Módulo de reportes, alertas de stock y estadísticas del negocio.</p>
-  </div>
-);
+const SummaryView: React.FC = () => <Overview />;
 
 const SalesView: React.FC = () => (
   <div className={styles.dummyView}>
