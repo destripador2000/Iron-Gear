@@ -4,6 +4,7 @@ import { useAuthContext } from '../../../infrastructure/context/AuthContext';
 import { hasPermission, UserRoles } from '../../../domain/auth/roles';
 import { AdminSidebar } from './components/AdminSidebar';
 import { AccessDenied } from './components/AccessDenied';
+import { ProductsView } from './components/ProductsView';
 
 interface AdminLayoutProps {
   currentSection?: 'summary' | 'products' | 'sales' | 'admin';
@@ -90,13 +91,6 @@ const SummaryView: React.FC = () => (
   <div className={styles.dummyView}>
     <h2>Resumen y Reportes</h2>
     <p>Módulo de reportes, alertas de stock y estadísticas del negocio.</p>
-  </div>
-);
-
-const ProductsView: React.FC = () => (
-  <div className={styles.dummyView}>
-    <h2>Gestión de Productos</h2>
-    <p>CRUD de productos: crear, editar, eliminar y listar inventario.</p>
   </div>
 );
 
