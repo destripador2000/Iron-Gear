@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './AccountPage.module.css';
 import { Header } from '../../components/header/Header';
 import { Footer } from '../../components/footer/Footer';
 import { FormInput } from '../../components/form/FormInput';
 import { TrustBadge } from '../../components/trustBadge/TrustBadge';
+import { useAuthContext } from '../../../infrastructure/context/AuthContext';
 
 interface Props {
   currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register';
@@ -16,8 +17,38 @@ const trustBadges = [
 ];
 
 export const AccountPage: React.FC<Props> = ({ currentPage = 'account', onNavigate }) => {
-  const handleSubmit = (e: React.FormEvent) => {
+  const { login, loading, error, clearError, isAuthenticated } = useAuthContext();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  // Si ya está autenticado, redirigir al inicio
+  useEffect(() => {
+    if (isAuthenticated) {
+      onNavigate?.('home');
+    }
+  }, [isAuthenticated, onNavigate]);
+
+  // Limpiar errores al desmontar
+  useEffect(() => {
+    return () => clearError();
+  }, [clearError]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const success = await login({ email, password });
+    if (success) {
+      onNavigate?.('home');
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (error) clearError();
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (error) clearError();
   };
 
   return (
@@ -38,13 +69,23 @@ export const AccountPage: React.FC<Props> = ({ currentPage = 'account', onNaviga
             <p className={styles.subtitle}>Accede a tu cuenta de alto rendimiento</p>
           </div>
 
+          {error && (
+            <div className={styles.errorBanner}>
+              <span className="material-symbols-outlined">error</span>
+              <span>{error}</span>
+            </div>
+          )}
+
           <form className={styles.form} onSubmit={handleSubmit}>
             <FormInput
               label="Correo electrónico"
               name="email"
               placeholder="ejemplo@irongear.com"
               type="email"
+              value={email}
+              onChange={handleEmailChange}
               required
+              disabled={loading}
             />
 
             <div className={styles.passwordRow}>
@@ -53,25 +94,48 @@ export const AccountPage: React.FC<Props> = ({ currentPage = 'account', onNaviga
                 name="password"
                 placeholder="••••••••"
                 isPassword
+                value={password}
+                onChange={handlePasswordChange}
                 required
+                disabled={loading}
               />
               <a href="#" className={styles.forgotPassword}>¿Olvidaste tu contraseña?</a>
             </div>
 
             <div className={styles.checkboxRow}>
-              <input type="checkbox" id="remember" className={styles.checkbox} />
+              <input type="checkbox" id="remember" className={styles.checkbox} disabled={loading} />
               <label htmlFor="remember" className={styles.checkboxLabel}>Recordarme</label>
             </div>
 
-            <button type="submit" className={styles.submitButton}>
-              Iniciar Sesión
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className={styles.spinner} />
+                  Iniciando sesión...
+                </>
+              ) : (
+                'Iniciar Sesión'
+              )}
             </button>
           </form>
 
           <div className={styles.footer}>
             <p className={styles.footerText}>
               ¿Nuevo en Iron Gear?
-              <a href="#" className={styles.link} onClick={(e) => { e.preventDefault(); onNavigate?.('register'); }}>Crea una cuenta</a>
+              <a
+                href="#"
+                className={styles.link}
+                onClick={(e) => {
+                  e.preventDefault();
+                  onNavigate?.('register');
+                }}
+              >
+                Crea una cuenta
+              </a>
             </p>
           </div>
         </div>
