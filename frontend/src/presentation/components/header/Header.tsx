@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Header.module.css';
+import { useAuthContext } from '../../../infrastructure/context/AuthContext';
 
 interface Props {
   currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register';
@@ -7,14 +8,21 @@ interface Props {
 }
 
 export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) => {
+  const { isAuthenticated, user, logout } = useAuthContext();
+
   const handleNavClick = (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register') => (e: React.MouseEvent) => {
     e.preventDefault();
     onNavigate?.(page);
   };
 
-  const handlePersonClick = (e: React.MouseEvent) => {
+  const handleAccountClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    onNavigate?.('account');
+    if (isAuthenticated) {
+      logout();
+      onNavigate?.('home');
+    } else {
+      onNavigate?.('account');
+    }
   };
 
   return (
@@ -33,9 +41,18 @@ export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) =>
           </div>
 
           <div className={styles.actions}>
-            <button className={styles.iconBtn} onClick={handlePersonClick}>
-              <span className="material-symbols-outlined">person</span>
-            </button>
+            {isAuthenticated && user ? (
+              <div className={styles.userMenu}>
+                <span className={styles.userName}>{user.name || user.email}</span>
+                <button className={styles.logoutBtn} onClick={handleAccountClick}>
+                  <span className="material-symbols-outlined">logout</span>
+                </button>
+              </div>
+            ) : (
+              <button className={styles.iconBtn} onClick={handleAccountClick}>
+                <span className="material-symbols-outlined">person</span>
+              </button>
+            )}
             <button className={styles.iconBtn}>
               <span className="material-symbols-outlined">shopping_cart</span>
               <span className={styles.cartBadge}>0</span>

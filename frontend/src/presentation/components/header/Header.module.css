@@ -140,3 +140,41 @@
   color: var(--color-primary-container);
   border-bottom-color: var(--color-primary-container);
 }
+
+.userMenu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .userName {
+    display: none;
+  }
+}
+
+.logoutBtn {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.logoutBtn:hover {
+  background-color: rgba(160, 65, 0, 0.1);
+}
