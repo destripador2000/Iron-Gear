@@ -1,0 +1,32 @@
+.button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--color-primary-container);
+  color: white;
+  border: none;
+  font-weight: 700;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: var(--color-primary);
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.added {
+  background-color: var(--color-secondary);
+  cursor: default;
+}
+
+.added:hover {
+  background-color: var(--color-secondary);
+}

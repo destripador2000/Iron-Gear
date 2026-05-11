@@ -1,16 +1,18 @@
 import React from 'react';
 import styles from './Header.module.css';
 import { useAuthContext } from '../../../infrastructure/context/AuthContext';
+import { useCart } from '../../../infrastructure/context/CartContext';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register') => void;
+  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout';
+  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout') => void;
 }
 
 export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) => {
   const { isAuthenticated, user, logout } = useAuthContext();
+  const { totalItems } = useCart();
 
-  const handleNavClick = (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register') => (e: React.MouseEvent) => {
+  const handleNavClick = (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout') => (e: React.MouseEvent) => {
     e.preventDefault();
     onNavigate?.(page);
   };
@@ -23,6 +25,11 @@ export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) =>
     } else {
       onNavigate?.('account');
     }
+  };
+
+  const handleCartClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onNavigate?.('cart');
   };
 
   return (
@@ -53,9 +60,11 @@ export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) =>
                 <span className="material-symbols-outlined">person</span>
               </button>
             )}
-            <button className={styles.iconBtn}>
+            <button className={styles.iconBtn} onClick={handleCartClick}>
               <span className="material-symbols-outlined">shopping_cart</span>
-              <span className={styles.cartBadge}>0</span>
+              {totalItems > 0 && (
+                <span className={styles.cartBadge}>{totalItems}</span>
+              )}
             </button>
             <button className={styles.iconBtn}>
               <span className="material-symbols-outlined">support_agent</span>

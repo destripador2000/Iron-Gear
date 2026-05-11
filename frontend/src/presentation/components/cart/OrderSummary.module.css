@@ -1,0 +1,159 @@
+.container {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  padding: 32px;
+  position: sticky;
+  top: 128px;
+}
+
+@media (max-width: 1023px) {
+  .container {
+    position: static;
+  }
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 32px 0;
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+.total {
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+}
+
+.totalLabel {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.totalValue {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--color-primary-container);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.checkoutBtn {
+  width: 100%;
+  padding: 16px;
+  background-color: var(--color-primary-container);
+  color: white;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: opacity 0.2s;
+}
+
+.checkoutBtn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.checkoutBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.promoSection {
+  padding-top: 24px;
+}
+
+.promoLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-light);
+  margin: 0 0 8px 0;
+}
+
+.promoRow {
+  display: flex;
+  gap: 8px;
+}
+
+.promoInput {
+  flex: 1;
+  padding: 8px 16px;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+  font-weight: 500;
+  outline: none;
+}
+
+.promoInput:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(160, 65, 0, 0.1);
+}
+
+.promoInput:disabled {
+  background-color: var(--bg-surface);
+}
+
+.promoBtn {
+  padding: 8px 16px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.promoBtn:hover:not(:disabled) {
+  background-color: var(--bg-surface);
+}
+
+.promoBtn:disabled {
+  cursor: not-allowed;
+}
+
+.promoApplied {
+  font-size: 12px;
+  color: var(--color-secondary);
+  margin: 8px 0 0 0;
+}
+
+.paymentIcons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
+
+.paymentIcon {
+  font-size: 32px;
+}
