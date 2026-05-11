@@ -207,17 +207,54 @@
   margin-bottom: 8px;
 }
 
-.productPrice {
-  font-size: 24px;
-  font-weight: 900;
-  color: var(--text-main);
+.stockBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 
-.productDescription {
-  font-size: 14px;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-  line-height: 1.4;
+.stockBadge span {
+  font-size: 16px;
+}
+
+.stockBadge[data-stock="0"] {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.stockBadge[data-stock="0"] span {
+  color: #dc2626;
+}
+
+.stockBadge[data-stock="1"],
+.stockBadge[data-stock="2"],
+.stockBadge[data-stock="3"],
+.stockBadge[data-stock="4"],
+.stockBadge[data-stock="5"] {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.stockBadge[data-stock="1"] span,
+.stockBadge[data-stock="2"] span,
+.stockBadge[data-stock="3"] span,
+.stockBadge[data-stock="4"] span,
+.stockBadge[data-stock="5"] span {
+  color: #d97706;
+}
+
+.stockBadge[data-stock]:not([data-stock="0"]):not([data-stock="1"]):not([data-stock="2"]):not([data-stock="3"]):not([data-stock="4"]):not([data-stock="5"]) {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.stockBadge[data-stock]:not([data-stock="0"]):not([data-stock="1"]):not([data-stock="2"]):not([data-stock="3"]):not([data-stock="4"]):not([data-stock="5"]) span {
+  color: #16a34a;
 }
 
 .infoSection {

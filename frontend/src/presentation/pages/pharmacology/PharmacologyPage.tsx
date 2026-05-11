@@ -94,6 +94,10 @@ export const PharmacologyPage: React.FC<Props> = ({ currentPage = 'pharmacology'
                       </div>
                     </div>
                     <div className={styles.productInfo}>
+                      <div className={styles.stockBadge} data-stock={product.stock}>
+                        <span className="material-symbols-outlined">inventory_2</span>
+                        {product.stock === 0 ? 'Agotado' : product.stock <= 5 ? `Poco stock (${product.stock})` : `En stock (${product.stock})`}
+                      </div>
                       <h4 className={styles.productTitle}>{product.name}</h4>
                       {product.description && (
                         <p className={styles.productDescription}>{product.description}</p>

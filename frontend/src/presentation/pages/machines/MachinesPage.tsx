@@ -95,6 +95,10 @@ export const MachinesPage: React.FC<Props> = ({ currentPage = 'machines', onNavi
                       </div>
                     </div>
                     <div className={styles.productInfo}>
+                      <div className={styles.stockBadge} data-stock={product.stock}>
+                        <span className="material-symbols-outlined">inventory_2</span>
+                        {product.stock === 0 ? 'Agotado' : product.stock <= 5 ? `Poco stock (${product.stock})` : `En stock (${product.stock})`}
+                      </div>
                       <h3 className={styles.productTitle}>{product.name}</h3>
                       {product.description && (
                         <p className={styles.productDescription}>{product.description}</p>
