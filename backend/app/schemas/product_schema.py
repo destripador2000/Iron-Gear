@@ -13,6 +13,7 @@ class ProductBase(BaseSchema):
     is_discount: bool = False
     stock: int = 0
     category: str = Field(max_length=50)
+    image_url: str | None = Field(default=None, max_length=500)
 
 
 class ProductCreate(ProductBase):
@@ -29,6 +30,7 @@ class ProductUpdate(BaseSchema):
     is_discount: bool | None = None
     stock: int | None = None
     category: str | None = Field(default=None, max_length=50)
+    image_url: str | None = Field(default=None, max_length=500)
 
 
 class ProductRead(ProductBase):

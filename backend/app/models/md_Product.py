@@ -33,6 +33,7 @@ class Product(Base):
     is_discount: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     stock: Mapped[int] = mapped_column(default=0, nullable=False)
     category: Mapped[str] = mapped_column(String(50), nullable=False)
+    image_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     # Relación con distribuidor
     distributor: Mapped["Distributor"] = relationship(back_populates="products")
