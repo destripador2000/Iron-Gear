@@ -1,12 +1,55 @@
 import React, { useState } from 'react';
 import styles from './Sidebar.module.css';
 
-interface Props {
+export interface FilterState {
+  maxPrice: number;
+  brands: string[];
+}
+
+const DEFAULT_FILTERS: FilterState = {
+  maxPrice: 0,
+  brands: [],
+};
+
+interface SidebarProps {
+  filters?: FilterState;
+  onFilterChange?: (filters: FilterState) => void;
   variant?: 'default' | 'pharmacology';
 }
 
-export const Sidebar: React.FC<Props> = ({ variant = 'default' }) => {
-  const [priceValue, setPriceValue] = useState(5000);
+const BRANDS = [
+  { id: 'iron', name: 'Iron Supply Co' },
+  { id: 'fitworld', name: 'FitWorld Distributors' },
+];
+
+export const Sidebar: React.FC<SidebarProps> = ({ 
+  filters = DEFAULT_FILTERS, 
+  onFilterChange,
+  variant = 'default' 
+}) => {
+  const [localFilters, setLocalFilters] = useState<FilterState>(filters);
+
+  const handlePriceChange = (value: number) => {
+    const newFilters = { ...localFilters, maxPrice: value };
+    setLocalFilters(newFilters);
+    onFilterChange?.(newFilters);
+  };
+
+  const handleBrandToggle = (brandId: string) => {
+    const currentBrands = localFilters.brands;
+    const newBrands = currentBrands.includes(brandId)
+      ? currentBrands.filter(b => b !== brandId)
+      : [...currentBrands, brandId];
+    const newFilters = { ...localFilters, brands: newBrands };
+    setLocalFilters(newFilters);
+    onFilterChange?.(newFilters);
+  };
+
+  const handleClearFilters = () => {
+    const clearedFilters: FilterState = { maxPrice: 0, brands: [] };
+    setLocalFilters(clearedFilters);
+    onFilterChange?.(clearedFilters);
+  };
 
   return (
     <aside className={styles.sidebar}>
@@ -68,10 +111,14 @@ export const Sidebar: React.FC<Props> = ({ variant = 'default' }) => {
               className={styles.rangeInput} 
               min="0" 
               max="5000" 
-              value={priceValue}
-              onChange={(e) => setPriceValue(Number(e.target.value))}
+              value={localFilters.maxPrice}
+              onChange={(e) => handlePriceChange(Number(e.target.value))}
             />
-            <div className={styles.priceValue}>${priceValue.toLocaleString()}</div>
+            <div className={styles.priceValue}>
+              {localFilters.maxPrice === 0 
+                ? 'Todos los precios' 
+                : `$${localFilters.maxPrice.toLocaleString()} - $${(localFilters.maxPrice + 999).toLocaleString()}`}
+            </div>
             <div className={styles.rangeLabels}>
               <span>$0</span>
               <span>$5000+</span>
@@ -83,15 +130,21 @@ export const Sidebar: React.FC<Props> = ({ variant = 'default' }) => {
               <span className="material-symbols-outlined">factory</span>
               <h4>Marca</h4>
             </div>
-            <label className={styles.checkboxLabel}>
-              <input type="checkbox" /> Iron Gear Pro
-            </label>
-            <label className={styles.checkboxLabel}>
-              <input type="checkbox" /> Rogue Fitness
-            </label>
+            {BRANDS.map(brand => (
+              <label key={brand.id} className={styles.checkboxLabel}>
+                <input 
+                  type="checkbox" 
+                  checked={localFilters.brands.includes(brand.id)}
+                  onChange={() => handleBrandToggle(brand.id)}
+                />
+                {brand.name}
+              </label>
+            ))}
           </div>
 
-          <button className={styles.clearBtn}>Limpiar Filtros</button>
+          <button className={styles.clearBtn} onClick={handleClearFilters}>
+            Limpiar Filtros
+          </button>
         </>
       )}
     </aside>

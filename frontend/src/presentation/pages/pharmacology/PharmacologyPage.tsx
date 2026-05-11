@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import styles from './PharmacologyPage.module.css';
 import { Header } from '../../components/header/Header';
 import { Footer } from '../../components/footer/Footer';
-import { Sidebar } from '../../components/sidebar/Sidebar';
+import { Sidebar, type FilterState } from '../../components/sidebar/Sidebar';
 import { AddToCartButton } from '../../components/product/AddToCartButton';
 import { useProducts } from '../../../infrastructure/hooks/useProducts';
 import { CATEGORIES } from '../../../domain/product/constants';
@@ -15,6 +15,8 @@ interface Props {
 }
 
 const CATEGORY = CATEGORIES.PHARMACOLOGY;
+
+const DEFAULT_FILTERS: FilterState = { maxPrice: 0, brands: [] };
 
 const LoadingSkeleton = () => (
   <div className={styles.skeletonGrid}>
@@ -41,7 +43,29 @@ const ErrorState = ({ message, onRetry }: { message: string; onRetry: () => void
 );
 
 export const PharmacologyPage: React.FC<Props> = ({ currentPage = 'pharmacology', onNavigate }) => {
-  const { products, loading, error } = useProducts(CATEGORY);
+  const { products: allProducts, loading, error } = useProducts(CATEGORY);
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
+
+  const products = useMemo(() => {
+    return allProducts.filter(product => {
+      const price = product.price || 0;
+      if (filters.maxPrice > 0) {
+        const minPrice = filters.maxPrice;
+        const maxPrice = filters.maxPrice + 999;
+        if (price < minPrice || price > maxPrice) return false;
+      }
+      if (filters.brands.length > 0) {
+        const distributorName = product.distributor?.name?.toLowerCase() || '';
+        const brandMatch = filters.brands.some(brandId => {
+          if (brandId === 'iron') return distributorName.includes('iron') || distributorName.includes('supply');
+          if (brandId === 'fitworld') return distributorName.includes('fitworld') || distributorName.includes('distributor');
+          return false;
+        });
+        if (!brandMatch) return false;
+      }
+      return true;
+    });
+  }, [allProducts, filters]);
 
   const handleRetry = () => {
     window.location.reload();
@@ -51,7 +75,7 @@ export const PharmacologyPage: React.FC<Props> = ({ currentPage = 'pharmacology'
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header currentPage={currentPage} onNavigate={onNavigate} />
       <div className={styles.pageContainer}>
-        <Sidebar />
+        <Sidebar filters={filters} onFilterChange={setFilters} />
         <main className={styles.mainContent}>
           <div className={styles.heroBanner}>
             <img 

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styles from './App.module.css';
 import { AuthProvider } from './infrastructure/context/AuthContext';
 import { CartProvider } from './infrastructure/context/CartContext';
 import { Header } from './presentation/components/header/Header';
 import { Footer } from './presentation/components/footer/Footer';
-import { Sidebar } from './presentation/components/sidebar/Sidebar';
+import { Sidebar, type FilterState } from './presentation/components/sidebar/Sidebar';
 import { AddToCartButton } from './presentation/components/product/AddToCartButton';
 import { DumbbellsPage } from './presentation/pages/dumbbells/DumbbellsPage';
 import { BarsPage } from './presentation/pages/bars/BarsPage';
@@ -21,9 +21,12 @@ import { productService, mapProductToFrontend } from './infrastructure/api/produ
 import type { Product } from './domain/product/types';
 import type { Page } from './domain/types';
 
+const DEFAULT_FILTERS: FilterState = { maxPrice: 0, brands: [] };
+
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [homeProducts, setHomeProducts] = useState<{ products: Product[]; loading: boolean }>({ products: [], loading: true });
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -36,6 +39,27 @@ const App: React.FC = () => {
     };
     fetchProducts();
   }, []);
+
+  const filteredProducts = useMemo(() => {
+    return homeProducts.products.filter(product => {
+      const price = product.price || 0;
+      if (filters.maxPrice > 0) {
+        const minPrice = filters.maxPrice;
+        const maxPrice = filters.maxPrice + 999;
+        if (price < minPrice || price > maxPrice) return false;
+      }
+      if (filters.brands.length > 0) {
+        const distributorName = product.distributor?.name?.toLowerCase() || '';
+        const brandMatch = filters.brands.some(brandId => {
+          if (brandId === 'iron') return distributorName.includes('iron') || distributorName.includes('supply');
+          if (brandId === 'fitworld') return distributorName.includes('fitworld') || distributorName.includes('distributor');
+          return false;
+        });
+        if (!brandMatch) return false;
+      }
+      return true;
+    });
+  }, [homeProducts.products, filters]);
 
   if (currentPage === 'dumbbells') {
     return (
@@ -153,7 +177,7 @@ const App: React.FC = () => {
         <div className={styles.layout}>
           <Header currentPage={currentPage} onNavigate={setCurrentPage} />
           <main className={styles.mainContainer}>
-            <Sidebar />
+            <Sidebar filters={filters} onFilterChange={setFilters} />
             
             <section className={styles.catalogSection}>
               <div className={styles.heroBanner}>
@@ -173,7 +197,7 @@ const App: React.FC = () => {
                 <div className={styles.loading}>Cargando productos...</div>
               ) : (
                 <div className={styles.productGrid}>
-                  {homeProducts.products.map((product) => {
+                  {filteredProducts.map((product) => {
                     const frontendProduct = mapProductToFrontend(product);
                     return (
                       <article key={product.id} className={styles.productCard}>
