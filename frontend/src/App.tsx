@@ -16,7 +16,9 @@ import { AccountPage } from './presentation/pages/account/AccountPage';
 import { RegisterPage } from './presentation/pages/account/RegisterPage';
 import { CartPage } from './presentation/pages/cart/CartPage';
 import { CheckoutPage } from './presentation/pages/checkout/CheckoutPage';
+import { DashboardPage } from './presentation/pages/admin/DashboardPage';
 import type { ProductMock } from './domain/product/types';
+import type { Page } from './domain/types';
 
 const mockProducts: ProductMock[] = [
   {
@@ -99,8 +101,6 @@ const mockProducts: ProductMock[] = [
     description: 'Guantes con soporte de muñeca y palma reforzada. Material transpirable.'
   }
 ];
-
-type Page = 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -200,6 +200,16 @@ const App: React.FC = () => {
       <CartProvider>
         <AuthProvider>
           <CheckoutPage currentPage={currentPage} onNavigate={setCurrentPage} />
+        </AuthProvider>
+      </CartProvider>
+    );
+  }
+
+  if (currentPage === 'dashboard') {
+    return (
+      <CartProvider>
+        <AuthProvider>
+          <DashboardPage />
         </AuthProvider>
       </CartProvider>
     );

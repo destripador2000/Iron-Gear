@@ -15,10 +15,11 @@ import {
   initialShippingData,
   initialCardData,
 } from '../../../domain/checkout/types';
+import type { Page } from '../../../domain/types';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout') => void;
+  currentPage?: Page;
+  onNavigate?: (page: Page) => void;
 }
 
 interface FormErrors {

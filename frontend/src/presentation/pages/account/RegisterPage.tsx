@@ -3,10 +3,11 @@ import styles from './RegisterPage.module.css';
 import { Header } from '../../components/header/Header';
 import { Footer } from '../../components/footer/Footer';
 import { useAuthContext } from '../../../infrastructure/context/AuthContext';
+import type { Page } from '../../../domain/types';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout') => void;
+  currentPage?: Page;
+  onNavigate?: (page: Page) => void;
 }
 
 const benefits = [

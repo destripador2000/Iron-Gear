@@ -7,10 +7,11 @@ import { AddToCartButton } from '../../components/product/AddToCartButton';
 import { useProducts } from '../../../infrastructure/hooks/useProducts';
 import { CATEGORIES } from '../../../domain/product/constants';
 import { mapProductToFrontend } from '../../../infrastructure/api/productService';
+import type { Page } from '../../../domain/types';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout') => void;
+  currentPage?: Page;
+  onNavigate?: (page: Page) => void;
 }
 
 const CATEGORY = CATEGORIES.BARS;

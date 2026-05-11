@@ -5,10 +5,12 @@ import { Footer } from '../../components/footer/Footer';
 import { FormInput } from '../../components/form/FormInput';
 import { TrustBadge } from '../../components/trustBadge/TrustBadge';
 import { useAuthContext } from '../../../infrastructure/context/AuthContext';
+import { UserRoles } from '../../../domain/auth/roles';
+import type { Page } from '../../../domain/types';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout') => void;
+  currentPage?: Page;
+  onNavigate?: (page: Page) => void;
 }
 
 const trustBadges = [
@@ -17,16 +19,20 @@ const trustBadges = [
 ];
 
 export const AccountPage: React.FC<Props> = ({ currentPage = 'account', onNavigate }) => {
-  const { login, loading, error, clearError, isAuthenticated } = useAuthContext();
+  const { login, loading, error, clearError, isAuthenticated, user: currentUser } = useAuthContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // Si ya está autenticado, redirigir al inicio
+  // Si ya está autenticado, redirigir según rol
   useEffect(() => {
-    if (isAuthenticated) {
-      onNavigate?.('home');
+    if (isAuthenticated && currentUser) {
+      if (currentUser.role === UserRoles.ADMIN || currentUser.role === UserRoles.SELLER) {
+        onNavigate?.('dashboard');
+      } else {
+        onNavigate?.('home');
+      }
     }
-  }, [isAuthenticated, onNavigate]);
+  }, [isAuthenticated, currentUser, onNavigate]);
 
   // Limpiar errores al desmontar
   useEffect(() => {
@@ -35,9 +41,13 @@ export const AccountPage: React.FC<Props> = ({ currentPage = 'account', onNaviga
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await login({ email, password });
-    if (success) {
-      onNavigate?.('home');
+    const loggedUser = await login({ email, password });
+    if (loggedUser) {
+      if (loggedUser.role === UserRoles.ADMIN || loggedUser.role === UserRoles.SELLER) {
+        onNavigate?.('dashboard');
+      } else {
+        onNavigate?.('home');
+      }
     }
   };
 

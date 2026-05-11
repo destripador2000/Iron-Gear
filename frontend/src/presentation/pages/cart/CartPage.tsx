@@ -5,10 +5,11 @@ import { Footer } from '../../components/footer/Footer';
 import { CartItem } from '../../components/cart/CartItem';
 import { OrderSummary } from '../../components/cart/OrderSummary';
 import { useCart } from '../../../infrastructure/context/CartContext';
+import type { Page } from '../../../domain/types';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout') => void;
+  currentPage?: Page;
+  onNavigate?: (page: Page) => void;
 }
 
 const FREE_SHIPPING_THRESHOLD = 500;

@@ -2,17 +2,18 @@ import React from 'react';
 import styles from './Header.module.css';
 import { useAuthContext } from '../../../infrastructure/context/AuthContext';
 import { useCart } from '../../../infrastructure/context/CartContext';
+import type { Page } from '../../../domain/types';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout') => void;
+  currentPage?: Page;
+  onNavigate?: (page: Page) => void;
 }
 
 export const Header: React.FC<Props> = ({ currentPage = 'home', onNavigate }) => {
   const { isAuthenticated, user, logout } = useAuthContext();
   const { totalItems } = useCart();
 
-  const handleNavClick = (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout') => (e: React.MouseEvent) => {
+  const handleNavClick = (page: Page) => (e: React.MouseEvent) => {
     e.preventDefault();
     onNavigate?.(page);
   };

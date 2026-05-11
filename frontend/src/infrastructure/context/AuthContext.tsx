@@ -7,7 +7,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
-  login: (credentials: LoginCredentials) => Promise<boolean>;
+  login: (credentials: LoginCredentials) => Promise<User | null>;
   register: (data: RegisterData) => Promise<boolean>;
   logout: () => void;
   clearError: () => void;
@@ -32,7 +32,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }, []);
 
-  const login = useCallback(async (credentials: LoginCredentials): Promise<boolean> => {
+  const login = useCallback(async (credentials: LoginCredentials): Promise<User | null> => {
     setLoading(true);
     setError(null);
 
@@ -41,18 +41,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (response.error) {
       setError(response.error);
       setLoading(false);
-      return false;
+      return null;
     }
 
     if (response.data?.access_token) {
       authService.saveToken(response.data.access_token);
-      setUser(response.data.user || { id: 0, email: credentials.email, name: '', role: 'cliente' } as User);
+      const userData = response.data.user || { id: 0, email: credentials.email, name: '', role: 'cliente' } as User;
+      setUser(userData);
       setLoading(false);
-      return true;
+      return userData;
     }
 
     setLoading(false);
-    return false;
+    return null;
   }, []);
 
   const register = useCallback(async (data: RegisterData): Promise<boolean> => {
