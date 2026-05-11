@@ -3,12 +3,14 @@ import styles from './PharmacologyPage.module.css';
 import { Header } from '../../components/header/Header';
 import { Footer } from '../../components/footer/Footer';
 import { Sidebar } from '../../components/sidebar/Sidebar';
+import { AddToCartButton } from '../../components/product/AddToCartButton';
 import { useProducts } from '../../../infrastructure/hooks/useProducts';
 import { CATEGORIES } from '../../../domain/product/constants';
+import { mapProductToFrontend } from '../../../infrastructure/api/productService';
 
 interface Props {
-  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register';
-  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register') => void;
+  currentPage?: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout';
+  onNavigate?: (page: 'home' | 'dumbbells' | 'bars' | 'clothing' | 'machines' | 'supplements' | 'pharmacology' | 'account' | 'register' | 'cart' | 'checkout') => void;
 }
 
 const CATEGORY = CATEGORIES.PHARMACOLOGY;
@@ -69,36 +71,40 @@ export const PharmacologyPage: React.FC<Props> = ({ currentPage = 'pharmacology'
 
           {!loading && !error && (
             <div className={styles.productGrid}>
-              {products.map((product) => (
-                <article key={product.id} className={styles.productCard}>
-                  <div className={styles.imageWrapper}>
-                    <img 
-                      src={product.imageUrl} 
-                      alt={product.imageAlt} 
-                      className={styles.productImage}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://placehold.co/400x400/e5e7eb/9ca3af?text=Imagen+no+disponible';
-                      }}
-                    />
-                    <div className={styles.quickAdd}>
-                      <button className={styles.quickAddButton}>
-                        <span className="material-symbols-outlined">shopping_cart</span>
-                        AGREGAR AL CARRITO
-                      </button>
+              {products.map((product) => {
+                const frontendProduct = mapProductToFrontend(product);
+                return (
+                  <article key={product.id} className={styles.productCard}>
+                    <div className={styles.imageWrapper}>
+                      <img 
+                        src={frontendProduct.imageUrl} 
+                        alt={frontendProduct.imageAlt} 
+                        className={styles.productImage}
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://placehold.co/400x400/e5e7eb/9ca3af?text=Imagen+no+disponible';
+                        }}
+                      />
+                      <div className={styles.quickAdd}>
+                        <AddToCartButton
+                          product={product}
+                          imageUrl={frontendProduct.imageUrl}
+                          imageAlt={frontendProduct.imageAlt}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className={styles.productInfo}>
-                    <h4 className={styles.productTitle}>{product.name}</h4>
-                    {product.description && (
-                      <p className={styles.productDescription}>{product.description}</p>
-                    )}
-                    {product.distributor && (
-                      <p className={styles.productBrand}>Proveedor: {product.distributor.name}</p>
-                    )}
-                    <p className={styles.productPrice}>${product.price.toFixed(2)}</p>
-                  </div>
-                </article>
-              ))}
+                    <div className={styles.productInfo}>
+                      <h4 className={styles.productTitle}>{product.name}</h4>
+                      {product.description && (
+                        <p className={styles.productDescription}>{product.description}</p>
+                      )}
+                      {product.distributor && (
+                        <p className={styles.productBrand}>Proveedor: {product.distributor.name}</p>
+                      )}
+                      <p className={styles.productPrice}>${product.price.toFixed(2)}</p>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           )}
 
