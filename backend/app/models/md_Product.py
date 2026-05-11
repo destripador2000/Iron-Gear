@@ -17,7 +17,7 @@ class ProductCategory(str, Enum):
     BARS = "barras"          # Barras
     CLOTHING = "ropa"        # Ropa
     SUPPLEMENTS = "suplementos"  # Suplementos
-    PHARMACOLOGY = "farmacología deportiva"  # Farmacología deportiva
+    PHARMACOLOGY = "farmacología"  # Farmacología
 
 # Modelo para la tabla de Productos
 

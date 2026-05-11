@@ -4,7 +4,7 @@ export const CATEGORIES = {
   MACHINES: 'máquinas',
   CLOTHING: 'ropa',
   SUPPLEMENTS: 'suplementos',
-  PHARMACOLOGY: 'farmacología deportiva',
+  PHARMACOLOGY: 'farmacología',
 } as const;
 
 export type CategoryKey = keyof typeof CATEGORIES;
