@@ -6,6 +6,8 @@ import { AdminSidebar } from './components/AdminSidebar';
 import { AccessDenied } from './components/AccessDenied';
 import { ProductsView } from './components/ProductsView';
 import { Overview } from './components/Overview';
+import { AdministrationView } from './components/AdministrationView';
+import { SalesView } from './components/SalesView';
 
 interface AdminLayoutProps {
   currentSection?: 'summary' | 'products' | 'sales' | 'admin';
@@ -47,7 +49,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ currentSection = 'prod
       case 'products':
         return <ProductsView />;
       case 'sales':
-        return <SalesView />;
+        return <SalesSectionView />;
       case 'admin':
         return <AdminSectionView />;
       default:
@@ -89,16 +91,6 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ currentSection = 'prod
 
 const SummaryView: React.FC = () => <Overview />;
 
-const SalesView: React.FC = () => (
-  <div className={styles.dummyView}>
-    <h2>Historial de Ventas</h2>
-    <p>Ver todas las órdenes, estado de envíos y transacciones.</p>
-  </div>
-);
+const SalesSectionView: React.FC = () => <SalesView />;
 
-const AdminSectionView: React.FC = () => (
-  <div className={styles.dummyView}>
-    <h2>Administración</h2>
-    <p>CRUD de usuarios, proveedores y configuración del sistema.</p>
-  </div>
-);
+const AdminSectionView: React.FC = () => <AdministrationView />;
