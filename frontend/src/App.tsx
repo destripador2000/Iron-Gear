@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './App.module.css';
+import { AuthProvider } from './infrastructure/context/AuthContext';
 import { Header } from './presentation/components/header/Header';
 import { Footer } from './presentation/components/footer/Footer';
 import { Sidebar } from './presentation/components/sidebar/Sidebar';
@@ -102,70 +103,104 @@ const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('home');
 
   if (currentPage === 'dumbbells') {
-    return <DumbbellsPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+    return (
+      <AuthProvider>
+        <DumbbellsPage currentPage={currentPage} onNavigate={setCurrentPage} />
+      </AuthProvider>
+    );
   }
 
   if (currentPage === 'bars') {
-    return <BarsPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+    return (
+      <AuthProvider>
+        <BarsPage currentPage={currentPage} onNavigate={setCurrentPage} />
+      </AuthProvider>
+    );
   }
 
   if (currentPage === 'clothing') {
-    return <ClothingPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+    return (
+      <AuthProvider>
+        <ClothingPage currentPage={currentPage} onNavigate={setCurrentPage} />
+      </AuthProvider>
+    );
   }
 
   if (currentPage === 'machines') {
-    return <MachinesPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+    return (
+      <AuthProvider>
+        <MachinesPage currentPage={currentPage} onNavigate={setCurrentPage} />
+      </AuthProvider>
+    );
   }
 
   if (currentPage === 'supplements') {
-    return <SupplementsPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+    return (
+      <AuthProvider>
+        <SupplementsPage currentPage={currentPage} onNavigate={setCurrentPage} />
+      </AuthProvider>
+    );
   }
 
   if (currentPage === 'pharmacology') {
-    return <PharmacologyPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+    return (
+      <AuthProvider>
+        <PharmacologyPage currentPage={currentPage} onNavigate={setCurrentPage} />
+      </AuthProvider>
+    );
   }
 
   if (currentPage === 'account') {
-    return <AccountPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+    return (
+      <AuthProvider>
+        <AccountPage currentPage={currentPage} onNavigate={setCurrentPage} />
+      </AuthProvider>
+    );
   }
 
   if (currentPage === 'register') {
-    return <RegisterPage currentPage={currentPage} onNavigate={setCurrentPage} />;
+    return (
+      <AuthProvider>
+        <RegisterPage currentPage={currentPage} onNavigate={setCurrentPage} />
+      </AuthProvider>
+    );
   }
 
   return (
-    <div className={styles.layout}>
-      <Header currentPage={currentPage} onNavigate={setCurrentPage} />
-      <main className={styles.mainContainer}>
-        <Sidebar />
-        
-        <section className={styles.catalogSection}>
-          <div className={styles.heroBanner}>
-            <img 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPVaR-IHY98Czm9Yyq_Psl6ag4Zg8RhdSxKhxurHyD9ol7LLlQKQEB23FC7BliUkeD31sdIME9_tZj-igl_9a3tXf0wglDU1pTvedskPFpkV7cPFIlYMHuLmQBPtjH58DUwv-19lCm-00nCdlZ9zoMV5-8vhaEkVaA7Cs3nPqSfr8B33ReqR3QHp4OSzWZXIAJNir_TsQ3D0Qa6tbvRV7W9mfvZzTQbm4hj4rWo0zj_Aq873NKgBJYJ9iLD08d6Ids-YAnMfVgMCWx" 
-              alt="Iron Gear" 
-              className={styles.heroImage}
-            />
-            <div className={styles.heroContent}>
-              <span className={styles.heroLabel}>Professional Equipment</span>
-              <h1 className={styles.heroTitle}>Iron Gear</h1>
-              <p className={styles.heroDescription}>Nuestra selección premium de ingeniería superior diseñada para atletas de alto rendimiento.</p>
-            </div>
-          </div>
-
-          <div className={styles.productGrid}>
-            {mockProducts.map((product, index) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                isFeatured={index === 0} 
+    <AuthProvider>
+      <div className={styles.layout}>
+        <Header currentPage={currentPage} onNavigate={setCurrentPage} />
+        <main className={styles.mainContainer}>
+          <Sidebar />
+          
+          <section className={styles.catalogSection}>
+            <div className={styles.heroBanner}>
+              <img 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPVaR-IHY98Czm9Yyq_Psl6ag4Zg8RhdSxKhxurHyD9ol7LLlQKQEB23FC7BliUkeD31sdIME9_tZj-igl_9a3tXf0wglDU1pTvedskPFpkV7cPFIlYMHuLmQBPtjH58DUwv-19lCm-00nCdlZ9zoMV5-8vhaEkVaA7Cs3nPqSfr8B33ReqR3QHp4OSzWZXIAJNir_TsQ3D0Qa6tbvRV7W9mfvZzTQbm4hj4rWo0zj_Aq873NKgBJYJ9iLD08d6Ids-YAnMfVgMCWx" 
+                alt="Iron Gear" 
+                className={styles.heroImage}
               />
-            ))}
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
+              <div className={styles.heroContent}>
+                <span className={styles.heroLabel}>Professional Equipment</span>
+                <h1 className={styles.heroTitle}>Iron Gear</h1>
+                <p className={styles.heroDescription}>Nuestra selección premium de ingeniería superior diseñada para atletas de alto rendimiento.</p>
+              </div>
+            </div>
+
+            <div className={styles.productGrid}>
+              {mockProducts.map((product, index) => (
+                <ProductCard 
+                  key={product.id} 
+                  product={product} 
+                  isFeatured={index === 0} 
+                />
+              ))}
+            </div>
+          </section>
+        </main>
+        <Footer />
+      </div>
+    </AuthProvider>
   );
 };
 
